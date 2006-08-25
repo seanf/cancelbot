@@ -1,0 +1,97 @@
+﻿Cancel's BibleBot
+
+History:
+The original BibleBot 1.0 was written in Perl.  I learned Perl specifically to write the first bot only because there wasn't one in existance.  I was very green as Perl was my first stab at programming.  The code will probably show this if you look at it. After it was said and done though the thing worked.  I also went on to write companion GoogleBot, DictBot, SeenBot, OpBot, & WeatherBot.
+
+I can't remember why but one day I decided to learn Python.  Rather then fix all of the things I could have done better in my perl scripts and so I could get some practice in my new language I decided to rewrite all my scripts in Python.  It was rough going at first but now I must confess I love the cleaner look and the true object orientation.  I also really started to dig the fact that each python scripts run in their own interpretor and you can access the Python console while in xchat for testing.
+
+In both this version and the Perl version I tried to make it easy for users to add their own text.  You have a bibleroot directory like /home/cancelbot/biblebot In this directory you may put other directories as many as you'd like ie kjv, acv, nasb.  In those directories you may put files like gen, exo, lev.  So when a user in a channel says “kjv gen 1:1” /home/cancelbot/biblebot/kjv/gen is opened and the line that starts with 1:1 is found and returned. Restriction on the books are one book per file and one verse per line.  An exception is made for concordances that have reference numbers like Strong's.
+
+The bot may be used locally or remotely.  For uses in the channel syntax is as follows:
+
+kjv gen 1:1
+
+That will return a verse.  It is not case sensitive. Users can also pm their request to the bot.
+
+!search kjv Jesus wept
+!searchbybook kjv joh Jesus wept
+
+This will search the kjv for the phrase “Jesus wept” and private the results to the requestor.  The second example will search a specific book in a version to narrow down results. If no results are found it will tell them that as well. It is not case sensitive.  Users can also pm their request to the bot.
+
+Local usage is similar
+
+/bible kjv gen 1:1
+/search kjv Jesus wept
+
+
+BIBLEBOT.INI and BIBLEBOT.PY MUST GO IN YOUR .xchat2/
+
+Explanation of the lines in the ini file.
+
+One of the seemingly inconsequential but biggest changes in my scripts is taking the variables out of the script an putting them all in their own file.  It doesn't matter what order they are in in the file just that they are there.  One option per line.  Make special note to remove the first commented line.
+#This is the ini file for Cancel's BibleBot. One option per line. Do not delete this line.
+
+This option tells the script where to look for all of your different translations
+
+bibleroot=/home/cancelbot/biblebot
+
+This option is where to find the file that has a description of the directories in your bibleroot.  Users get played this file when they type !versions
+
+versionfile=/home/cancelbot/biblebot/versions.txt
+
+This option is where to find the help file.  Users get played this file when they type !help
+
+helpfile=/home/cancelbot/biblebot/help.txt
+
+This option tells the script where to find the rules file.  Users get played this file when they type !rules
+
+rulesfile=/home/cancelbot/rules
+
+This option tells the bot whether or not it should service public request
+
+service=yes
+
+This option tells the bot whether or not it should advertise
+
+advertise=yes
+
+This option tells the bot what channels to advertise in if adversties=yes
+
+advertisein=#christiandebate #christian
+
+This option is what to notice users who join when advertise is on
+
+advertisetext=Biblebot is on. Type !help for instructions
+
+This option is how many verses to allow users to request.  There is no local usage limit.
+
+verselimit=3
+
+This option is how many search items to return. Total count or none found is always given.
+
+searchlimit=5
+
+This option is how many search items to return for local search request.
+
+locallimit=10
+
+This option sets the book color
+
+color=red
+
+This option sets the verse color
+
+color=blue
+
+Allowable color options are: white, black, blue, green, red, dred, purple, dyellow, yellow, bgreen, dgreen, green, blue, bpurple, dgrey, lgrey
+
+This option is good if you are running unattended or bot mode.  It will clean up query windows from request to the bot.  You may not want this if you are running it live yourself as it will close your query windows
+
+cleanup=yes
+
+This option is the time in minutes to clean up windows
+
+cleanuptime=30
+
+License GPL
+1-12-06

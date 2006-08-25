@@ -1,0 +1,26 @@
+2-18-06 2.0.1
+Fixed bug that prevented concordance from working in local mode
+
+1-18-06
+Made RPM version.  Forcing mode "r" on files to accomodate RPM install
+Changed paths to use os.path.join on the variables instead of + / variable
+
+1-12-06
+Did some code cleaup
+Added two new variables cleanup and cleanuptime.  Will cleanup msg windows
+when running the biblebot in pure bot mode.
+
+5-17-05
+Added !searchbybook.  A user can now search a specific book in a version instead of every book in the version
+
+2-22-05
+Added all the public function to the private function.  Also changed it to not even go through the "ifs" unless the option["service"] is on
+
+2-9-05
+Files with blank lines now work.  No longer using '' but comparing the file.tell() before a line is read to after in a loop.
+
+2-8-05
+Fixed bug preventing !rules, !help, !list, and !versions from being played.
+
+2-2-05
+Initial release
