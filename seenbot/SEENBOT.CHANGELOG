@@ -1,0 +1,12 @@
+2-7-06 2.1.0
+Cleaned some things up
+Added regex searching
+
+4-18-05
+Fixed bug in the purge command
+
+2-17-05
+Removed the channel from the quit network as user may be in other channels the bot is in and it will try to write once for each one.
+
+2-9-05
+Initial release

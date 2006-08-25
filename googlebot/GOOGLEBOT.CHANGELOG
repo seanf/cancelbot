@@ -1,0 +1,7 @@
+2-19-06
+Fixed a bug in the number of local results
+Added feature to allow results to show in seperate window
+Now using ConfigParser for options
+
+11-16-05
+Initial release

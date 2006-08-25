@@ -1,0 +1,47 @@
+Cancel's GoogleBot
+
+History:
+The original BibleBot 1.0 was written in Perl.  I learned Perl specifically to write the first bot only because there wasn't one in existance.  I was very green as Perl was my first stab at programming.  The code will probably show this if you look at it. After it was said and done though the thing worked.  I also went on to write companion GoogleBot, DictBot, SeenBot, OpBot, & WeatherBot.
+
+The bot may be used locally or remotely.  For uses in the channel syntax is as follows:
+
+!google phrase
+!spell word or phrase
+
+For local usage 
+
+/google query word or phrase
+/google spell word or phrase
+
+pygoogle bust be installed by untarring and doing python setup.py install
+googlebot.ini and googlebot.py MUST GO IN YOUR ~/.xchat2
+
+Explanation of the lines in the ini file.
+
+One of the seemingly inconsequential but biggest changes in my scripts is taking the variables out of the script an putting them all in their own file.  It doesn't matter what order they are in in the file just that they are there.  One option per line.  Make special note not to remove the first commented line.
+
+#This is the ini file for Cancel's GoogleBot. One option per line. Do not delete this line.
+
+This option tells the bot if it should service others.  Local usage is always on.
+service = True
+
+This option is your google api key obtained from http://www.google.com/api
+licensekey = yourkeygoeshere
+
+This option is how many replies go back to a public channel request
+publiclimit = 3
+
+This options is how many replies go back to a private message request
+privatelimit = 5
+
+This option is how many replies go back to a channel from a local request
+locallimit = 8
+
+This option turns off or on the safesearch field of the google api request
+safesearch = 1
+
+This option says wether you should say your results in the channel tab you're onor in a seperate window
+returnintab = True
+
+License GPL
+8-23-06

@@ -1,0 +1,60 @@
+Cancel's SeenBot
+
+History:
+The original BibleBot 1.0 was written in Perl.  I learned Perl specifically to write the first bot only because there wasn't one in existance.  I was very green as Perl was my first stab at programming.  The code will probably show this if you look at it. After it was said and done though the thing worked.  I also went on to write companion GoogleBot, DictBot, SeenBot, OpBot, & WeatherBot.
+
+The bot may be used locally or remotely.  For uses in the channel syntax is as follows:
+
+!seen nick
+!seensearch expression (regex can be used)
+
+For local usage 
+
+To check for a nick. Nothing is returned if no result is found
+
+/seen nick
+
+To do a regex type search.  Nothing is returned if no result is found
+
+/seensearch nick was kicked by
+/seensearch host.*mask.com
+
+This gives the total number of records in the db
+
+/seencount
+
+This option dumps the database to a text file
+
+/seendump
+
+This option purges records in the db older then x days
+
+/seenpurge 30
+
+seenbot.ini and seenbot.py MUST GO IN YOUR ~/.xchat2
+
+Explanation of the lines in the ini file.
+
+One of the seemingly inconsequential but biggest changes in my scripts is taking the variables out of the script an putting them all in their own file.  It doesn't matter what order they are in in the file just that they are there.  One option per line.  Make special note to remove the first commented line.
+
+#This is the ini file for Cancel's DictBot. One option per line. Do not delete this line.
+
+This option tells the bot if it should service others.  Local usage is always on.
+
+service = no
+
+This option tells the bot what channels NOT to reply in.  Some channels like #linux on dalnet don't like useful bots
+
+notin = #linux
+
+This option is for the number of matches to return for remote requested searches
+
+searchlimit = 3
+
+This is the local return limit
+
+locallimit = 10
+
+License GPL
+
+2-09-05

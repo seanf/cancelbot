@@ -1,0 +1,36 @@
+Cancel's RelayBot
+
+RELAYBOT.INI and RELAYBOT.PY MUST GO IN YOUR ~/.xchat2
+
+Explanation of the lines in the ini file.
+
+One of the seemingly inconsequential but biggest changes in my scripts is taking the variables out of the script an putting them all in their own file.  It doesn't matter what order they are in in the file just that they are there.  One option per line.  Make special note not to remove the first commented line.
+
+
+This script has some limitations so buyer beware
+
+Because python find_context() does not allow for a network attribute I was not able to reliably and easily find the context of a channel when the source channel name and destination channel name where the same but the network was different.
+
+So I just didnt do it.  Things appear to work great when channel names are different though.
+
+#This is the ini file for Cancel's RelayBot. One option per line. Do not delete this line.
+
+
+This line says wether to start with the service off or on
+
+service=off
+
+This line is a space seperated list of regexes words found in lines you will not repeat
+
+badwords=b[.!@#$%^&*()_+i]tch
+
+This line is a space seperated list of relay pairs  The network is the network name in your xchat server setup
+
+relaypairs=sourcenetwork:#sourcechannel:destinationnetwork:#destchannel
+
+This line is the phrase to echo to the relay destination on lines that have bad words
+
+defaultmsg=Phrases with bad words are not relayed
+
+License GPL
+11-24-05

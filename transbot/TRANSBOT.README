@@ -1,0 +1,54 @@
+﻿Cancel's TransBot
+
+History:
+The original BibleBot 1.0 was written in Perl.  I learned Perl specifically to write the first bot only because there wasn't one in existance.  I was very green as Perl was my first stab at programming.  The code will probably show this if you look at it. After it was said and done though the thing worked.  I also went on to write companion GoogleBot, DictBot, SeenBot, OpBot, TransBot & WeatherBot.
+
+Before using the bot you must first install the translator.py Python module.  I decided to put all of the work of getting the weather in a seperate module so if you find it useful it can be used elsewhere.  With a few lines can be turned into a command line program.  Extract the translator-01.tar.gz  Then as root python setup.py install.  Then place the transbot.py module in your ~/.xchat2
+
+The bot may be used locally or remotely.  For uses in the channel syntax is as follows:
+
+!translate English Spanish Hello how are you
+Bot will reply hola cómo es usted
+
+!translators will return a list of valid language pairs.  If an invalid pair is chosen the user will be warned
+
+For local usage 
+
+/trans English Spanish Hellow how are you
+will say in the channel hola cómo es usted
+
+This is my favorite feature it will watch a nick and automatically translate their text for you.
+Turn autotranslation on/off
+/autotranslate on
+/autotranslate off
+
+Add a nick to the autotranslate table
+/autotranslate nick fromlanguage tolanguage
+
+Delete a nice from the autotranslate table
+/autotranslate del nick
+
+List the current autotranslators
+/autotranslate list
+
+Get a list language pairs
+/autotranslate translators
+/trans translators
+
+TRANSBOT.INI and TRANSBOT.PY MUST GO IN YOUR ~/.xchat2
+
+Explanation of the lines in the ini file.
+This option tells the bot if it should service others.  Local usage is always on.
+[main]
+service=on
+
+This option tells the bot if automatic translation is on or off by default.
+
+autotranslate=off
+
+Nicks to auto translate and their language pairs
+[autotranslators]
+nick = fromlangage tolanguage
+
+License GPL
+2-17-05

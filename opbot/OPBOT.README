@@ -1,0 +1,150 @@
+Cancel's OpBot 
+
+History:
+The original BibleBot 1.0 was written in Perl.  I learned Perl specifically to write the first bot only because there wasn't one in existence.  I was very green as Perl was my first stab at programming.  The code will probably show this if you look at it. after it was said and done though the thing worked.  I also went on to write companion GoogleBot, DictBot, SeenBot, OpBot, & WeatherBot.
+
+I can't remember why but one day I decided to learn Python.  Rather then fix all of the things I  could have done better in my perl scripts and so I could get some practice in my new language I decided to rewrite all my scripts in Python.  It was rough going at first but now I must confess I love the cleaner look and the true object orientation.  I also really started to dig the fact that each python script ran in its own interpretor and I could access the Python console while in Xchat for testing.
+
+opbot.ini and opbot.py MUST GO IN YOUR .xchat2/
+
+Explanation of the lines in the ini file.
+
+One of the seemingly inconsequential but biggest changes in my scripts is taking the variables out of the script an putting them all in their own file.  It doesn't matter what order they are in in the file just that they are there and in the right section.
+
+This option tells the bot what channels you are opped in. You don't want to be yelling at folks in channels you don't have ops in. Separate channels with spaces and make sure the channel name is as it appears in your Xchat tab.
+opin=#christiandebate #mychannel
+
+This option says if limitjoin is on
+limitjoins = yes
+
+This option tells the bot what channels to control the user limit format like opin
+limitchannels = #christian
+
+The number to increment the user limit by on join or parts
+limitincrement = 3
+
+The time in seconds to wait before adjusting the channel user limit
+limittime = 10
+
+This option is for moderated channels.  Tells the bot if it should give voice or not. 
+autovoice=yes
+
+This option is a list of channels to give voice in
+voicein=#christiandebate #mychannel
+
+This option tells the bot if it should autoidentify when a notice from "indentifyfrom" is received. If this yes the bot will check your nick every check minutes.  It will then execute a user defined command of release (make a command with that name in xchat user commands).  It will also issue a command to chanserv to op you in the channels in the opin
+identify=yes
+
+This option waits this many minutes before checking nick again
+check=5
+This option waits this many minutes before rescaning nicks in channels in opin against bad channels list.
+scan=20
+
+This option is the nick to expect identify notices from. This is case sensitive.
+identifyfrom=NickServ
+
+
+This option is what phrase to look for in notices from "identifyfrom".  This is case sensitive.  This should be what you are expecting NickServ to say.
+identifyphrase=I will change your nick for you
+
+This option is the nick you want to make sure you keep or change back to when idenitify
+mynick=CancelBot
+
+This option pings whoever request it.
+ping=yes
+
+This option returns uptime and load stats.
+uptime=yes
+
+This option turns caps abuse checking on or off
+capsabuse=yes
+
+If the line is this percent caps kick users
+capslimit=50
+
+This option is a space seperated list of words not to be said in a channel.  It is not case sensitive and will match anywhere in the string.
+badwords=the bad words go here you may use regexes like b.*tch f.*ck
+
+This option is a list of inappropriate nicks for the room.  This list automatically appends "badwords".  It will match anywhere in the nickname, host, or realusername.
+badnicks=nazi cock hitler satan lucifer hate
+
+This option is a list of inappropriate channels users checked when a user joins.  This list automatically adds "badwords"
+badchannels=porn hate sex xxx
+
+Should join flood and text flooding protection be on
+antiflood = yes
+
+This is the number of  joins or repeated text to trigger anti flood measures
+antifloodlimit = 3
+
+This is the time interval in minutes in which antiflood measures are tracked
+antifloodtime = 2
+
+Custom messages on kicks
+msgbadword = Try more appropriate language
+msgbadnick = Unacceptable nick or real name fields
+msgbadhost = Host is banned
+msgbadchannel = Bad channel event triggered
+msgcapsabuse = No need to yell
+msgjoinflood = Next time try to stay a while
+msgrepeatflood = No need to repeat like that
+
+If yes will check channels in opin everytime a nick joins channel
+clonescan = yes
+
+What to do with a clone.  This response should be a valid existing xchat command
+msg, notice, kick, ban, kickban
+clonesresponse = msg
+
+This is the message attached to the response taken on a clone
+clonemessage = Clones are not allowed
+
+[akicks]
+Nick1 = partofhosttomatch
+Nick2 = partofhosttomatch
+yehudim1 = gln-mres.charterpipeline.net 
+yehudim2 = bb-mres.charterpipline.net
+freethought = mercy.prism.net
+derek = it.up.cause
+
+Nicks and hostmask that can remotely operate the bots !voice !devoice !kick !ban
+!unban
+
+!autovoice !limitjoins !akick !badwords !badnicks !badchannels commands.
+
+The format follows.
+[ops]
+cancel = me.*home.com 
+cancelbot = your.*isp.com
+
+The [ops] section is automatically appened to [allowclones]
+The format is same
+[allowclones]
+jane = jane.*home.com
+
+Remote Usage
+!autovoice True/False
+!limitjoins True/False
+!voice nick
+!devoice nick
+!kick nick
+!ban nick
+!unban mask
+!akick list
+!akick del key
+!akick add nick regextomatch
+!badwords list
+!badwords del index
+!badwords add regextomatch
+!badnicks list
+!badnicks del index
+!badnicks add regextomatch
+!badchannels list
+!badchannels del index
+!badchannels add regextomatch
+
+Local commands
+/clonescan
+
+License GPL
+4-10-06

@@ -1,0 +1,6 @@
+3-8-06 2.0.1
+Some css on the site broke Visibility: so adjusted a regex
+Using ConfigParser for ini files now
+
+2-11-05 2.0.0
+Initial release

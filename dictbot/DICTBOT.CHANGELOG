@@ -1,0 +1,7 @@
+2-8-05
+Fixed private request so only answers when private trigger is '!define' and service is 'on'
+
+Made option["deflimit"] an interger so the it works correctly
+
+2-6-05
+Initial release

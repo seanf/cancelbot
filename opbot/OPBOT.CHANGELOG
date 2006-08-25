@@ -1,0 +1,79 @@
+4-10-06 2.6.0
+Added !unban command changed !ban unauthorized use response
+
+3-7-06 2.5.0
+Added local and automatic clone scanning.
+Added [allowclones] section to ini file.  See the readme
+
+3-4-06 2.4.0
+Added ability to customize kick messages for various events that trigger kicks
+on_voice on_devoice on_change_nick check for option["antiflood"] before trying to update dictionaries
+
+
+3-1-06 2.3.4
+Changed msg chanserv@services.dal.net to just /chanserv
+Fixed creation of instance of User on on_text
+
+2-26-06 2.3.3
+Same thing as on_voice and on_devoice. I wasn't checking if the channel the change occured was in the option["opin"]  How did I miss that? 
+
+2-22-06 2.3.2
+Another bug in user tracking. Fixed on_voice and on_devoice sections
+
+2-12-06 2.3.1
+Fixed bug in user tracking
+
+2-12-06 2.3.0
+Added ability to limit number of times a user can rejoin in a certain time period
+Added ability to limit number of times a user can repeat same phrase in a time period
+Changed the devoice so it will track nick and host
+
+2-8-06 2.2.0
+Added controlling channel user limits to prevent bot floods
+
+2-4-06 2.1.0
+Added operator name to the akicks so you know who added the kicks.
+
+1-22-06 2.0.0
+Major rewriting. Now using ConfigParser so had to rewrite everything for that.  Remote operates can now add, list, delete things in the akick, badwords, badnicks, badchannels lists
+
+1-4-06
+Small change so caps abuse won't kick operators
+
+11-22-05
+Badwords are appended to bad channels instead of bad nicks
+
+7-1-05
+Fixed a variable so that users devoiced dont get revoiced on a part/join
+
+4-13-05
+Made a slight change to allow voicing and devoicing multiple nicks instead of one at a time remotely
+
+4-7-05
+Added variable "scan" to the options file.  Will rescan users in the channels listed in "opin" against the bad channels list
+
+3-28-05
+Changed the badwords section so users can do space seperated regexs like
+f.ck so when folks try to be clever and use ! and @ they still get
+caught
+
+3-25-05
+Added remote control for non ops.
+
+3-5-05
+Added caps abuse
+
+2-17-05
+Added options for responding to !ping and !uptime
+
+2-12-05
+Added option for the time interval to check the nick
+
+2-11-05
+Changed the badhost checking so that wild cards like h*st.net are accepted
+
+2-6-05
+Added the devoiced list so folks users can not do a quick rejoin to evade a devoicing in a moderated channel.
+
+2-1-05
+Initial release

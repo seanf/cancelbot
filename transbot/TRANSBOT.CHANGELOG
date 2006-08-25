@@ -1,0 +1,6 @@
+2-17-06
+Changed ini file to use ConfigParser
+
+
+3-21-05
+Added EAT_XCHAT to local commands so they aren't sent to servers.  Pointed out by Kees Bergwerf.
