@@ -1,6 +1,6 @@
 #!/usr/bin/python
 __module_name__ = "Cancel's CalcBot"
-__module_version__ = "1.0" 
+__module_version__ = "1.1" 
 __module_description__ = "CalcBot by Cancel"
 
 import xchat
