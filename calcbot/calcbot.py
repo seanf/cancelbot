@@ -17,6 +17,7 @@ color = {"white":"\0030", "black":"\0031", "blue":"\0032", "green":"\0033", "red
 "dred":"\0035", "purple":"\0036", "dyellow":"\0037", "yellow":"\0038", "bgreen":"\0039",
 "dgreen":"\00310", "green":"\00311", "blue":"\00312", "bpurple":"\00313", "dgrey":"\00314",
 "lgrey":"\00315", "close":"\003"}
+invalid = re.compile('[ABCDEFGHIJLKMNOPQRSTUVWXYZ]', re.I)
 
 #the functions go here
 def load_vars():
@@ -56,6 +57,7 @@ def on_pvt(word, word_eol, userdata):
     
 def calculate(expression, destination):
     try:
+      if not invalid.search(expression):
         answer = eval(expression)
         destination.command("say " + expression + color["blue"] + " =" +
                              color["red"] + " " + str(answer))
@@ -83,5 +85,5 @@ xchat.hook_print('Private Message to Dialog', on_pvt)
 xchat.hook_command('calc', local_calculate, help="!calc expression remote, /calc expression local")
 
 #LICENSE GPL
-#Last modified 12-13-05
+#Last modified 8-25-06
 
