@@ -1,6 +1,6 @@
 #!/usr/bin/python
 __module_name__ = "Cancel's OpBot"
-__module_version__ = "2.6.0" 
+__module_version__ = "2.6.1" 
 __module_description__ = "OpBot by Cancel"
 
 import xchat
@@ -423,7 +423,7 @@ def on_whois_channels(word, wordeol, userdata):
     
     for badword in option["badchannels"]:
         if badword in channels:
-            thecontext.command("ban " + nickname +" 1")
+            thecontext.command("ban " + nickname)
             thecontext.command("kick " + nickname + " " + option["msgbadchannel"])
 
 def on_notice(word, wordeol, userdata):
@@ -606,15 +606,15 @@ def clonescan():
     allowed = []
     userlist = thecontext.get_list('users')
     for user in userlist:
-        checklist[user.nick] = re.split('@', user.host)[1]
+        checklist[user.nick.lower()] = re.split('@', user.host)[1]
     for user in checklist:
         if checklist.values().count(checklist[user]) > 1:
             clones[user] = checklist[user]
     #If host in option["allowclones"] remove from clones
     for key in option["allowclones"]:
-        for clone in clones:
-            if re.search(option["allowclones"][key], clones[clone], re.I):
-                allowed.append(clone)
+        if clones.has_key(key):
+            if re.search(option["allowclones"][key], clones[key], re.I):
+                allowed.append(key)
     if allowed:
         for user in allowed:
             del(clones[user])
@@ -657,4 +657,4 @@ xchat.hook_print('Channel Voice', on_voice)
 xchat.hook_command('clonescan', clonescan_local, help="/clonescan")
 
 #LICENSE GPL
-#Last modified 4-10-06
+#Last modified 9-17-06
