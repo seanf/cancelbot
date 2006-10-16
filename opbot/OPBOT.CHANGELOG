@@ -1,3 +1,6 @@
+10-16-06 2.6.2
+Fixed remote control of !autovoice and !limitjoins
+
 9-17-06 2.6.1
 Removed ban mask from badwords kick so it will just use the mask you've already have set
 Fixed clonescan
@@ -12,7 +15,6 @@ Added [allowclones] section to ini file.  See the readme
 3-4-06 2.4.0
 Added ability to customize kick messages for various events that trigger kicks
 on_voice on_devoice on_change_nick check for option["antiflood"] before trying to update dictionaries
-
 
 3-1-06 2.3.4
 Changed msg chanserv@services.dal.net to just /chanserv

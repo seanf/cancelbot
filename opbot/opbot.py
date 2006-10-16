@@ -1,6 +1,6 @@
 #!/usr/bin/python
 __module_name__ = "Cancel's OpBot"
-__module_version__ = "2.6.1" 
+__module_version__ = "2.6.2" 
 __module_description__ = "OpBot by Cancel"
 
 import xchat
@@ -163,6 +163,7 @@ def save_vars():
     option["badnicks"] += option["badwords"]
     
 def on_text(word, word_eol, userdata):
+    global option
     destination = xchat.get_context()    
     triggerchannel = destination.get_info("channel")
     triggernick = word[0].lower()
@@ -256,27 +257,39 @@ def on_text(word, word_eol, userdata):
 
         elif trigger[0] == "!autovoice":
             if prefix == "@":
-                option["autovoice"] = trigger[1].capitalize()
-                destination.command("say autovoice has been set " + color["blue"]+option["autovoice"])
+                if trigger[1] == "true" or trigger[1] == "on" or trigger[1] == "yes":
+                    option["autovoice"] = True
+                elif trigger[1] == "false" or trigger[1] == "off" or trigger[1] == "no":
+                    option["autovoice"] = False
+                destination.command("say autovoice is set to " + color["blue"] + str(option["autovoice"]))
                 save_vars()
             elif option["ops"].has_key(triggernick):
                 if re.search(option["ops"][triggernick],host,re.I):
-                    option["autovoice"] = trigger[1].capitalize()
-                    destination.command("say autovoice has been set "+color["blue"]+option["autovoice"])
-                    save_vars()
+                    if trigger[1] == "true" or trigger[1] == "on" or trigger[1] == "yes":
+                        option["autovoice"] = True
+                    elif trigger[1] == "false" or trigger[1] == "off" or trigger[1] == "no":
+                        option["autovoice"] = False
+                destination.command("say autovoice is set to " + color["blue"] + str(option["autovoice"]))
+                save_vars()
             else:
                 destination.command("kick " + triggernick)
                 
         elif trigger[0] == "!limitjoins":
             if prefix == "@":
-                option["limitjoins"] = trigger[1].capitalize()
-                destination.command("say limitjoins has been set " + color["blue"]+option["limitjoins"])
+                if trigger[1] == "true" or trigger[1] == "on" or trigger[1] == "yes":
+                    option["limitjoins"] = True
+                elif trigger[1] == "false" or trigger[1] == "off" or trigger[1] == "no":
+                    option["limitjoins"] = False
+                destination.command("say limitjoins is set to " + color["blue"] + str(option["limitjoins"]))
                 save_vars()
             elif option["ops"].has_key(triggernick):
                 if re.search(option["ops"][triggernick],host,re.I):
-                    option["limitjoins"] = trigger[1].capitalize()
-                    destination.command("say limitjoins has been set "+color["blue"]+option["limitjoins"])
-                    save_vars()
+                    if trigger[1] == "true" or trigger[1] == "on" or trigger[1] == "yes":
+                        option["limitjoins"] = True
+                elif trigger[1] == "false" or trigger[1] == "off" or trigger[1] == "no":
+                    option["limitjoins"] = False
+                destination.command("say limitjoins has been set "+color["blue"] + str(option["limitjoins"]))
+                save_vars()
             else:
                 destination.command("kick " + triggernick)
         
@@ -657,4 +670,4 @@ xchat.hook_print('Channel Voice', on_voice)
 xchat.hook_command('clonescan', clonescan_local, help="/clonescan")
 
 #LICENSE GPL
-#Last modified 9-17-06
+#Last modified 10-16-06
