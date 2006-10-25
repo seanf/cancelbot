@@ -19,7 +19,7 @@
 #    59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             #
 ############################################################################
 __module_name__ = "Cancel's GoogleBot"
-__module_version__ = "2.1.0" 
+__module_version__ = "2.1.1" 
 __module_description__ = "GoogleBot by Cancel"
 
 import xchat
@@ -108,7 +108,10 @@ def google_query(query, searchlimit, destination):
         for item in data.results:
             item.title = stripper.strip(item.title)
             item.snippet = stripper.strip(item.snippet)
-            destination.command("say " + color["red"] + item.title + " " + color["black"] + item.snippet + " " + color["blue"] + item.URL)
+            if option["resultsintab"] == True:
+                destination.prnt(color["red"] + item.title + " " + color["black"] + item.snippet + " " + color["blue"] + item.URL)
+            else:
+                destination.command("say " + color["red"] + item.title + " " + color["black"] + item.snippet + " " + color["blue"] + item.URL)
         
     except Exception, args:
         print color["red"], Exception, args
@@ -118,7 +121,10 @@ def google_spelling(query, destination):
     try:
         data = google.doSpellingSuggestion(query)
         if data != '':
-            destination.command("say " + data)
+            if option["resultsintab"] == True:
+                destination.prnt(data)
+            else:
+                destination.command("say " + data)
         
     except Exception, args:
         print color["red"], Exception, args
@@ -126,14 +132,17 @@ def google_spelling(query, destination):
     
 def local_google(word, word_eol, userdata):
     if option["resultsintab"] == True:
-        xchat.command("query >>Google<<")
-        destination = xchat.find_context(channel=">>Google<<")
+        xchat.command("query " + xchat.get_info("nick"))
+        destination = xchat.find_context(channel=xchat.get_info("nick"))
+        destination.command("settab >>Google<<")
     else:
         destination = xchat.get_context()
     if word[1] == 'query':
         google_query(word_eol[2], option["locallimit"], destination)
     if word[1] == 'spell' or word[1] == 'spelling':
         google_spelling(word_eol[2], destination)
+        
+    return xchat.EAT_ALL
 
 load_vars()
 
@@ -143,4 +152,4 @@ xchat.hook_print('Private Message to Dialog', on_pvt)
 xchat.hook_command('google', local_google, help="/google query what to lookup or /google spell word to check")
 
 #LICENSE GPL
-#Last modified 2-19-06
+#Last modified 10-24-06

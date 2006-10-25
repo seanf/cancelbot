@@ -1,3 +1,6 @@
+10-24-06 2.1.1
+Fixed the way results in a seperate tab is generated. How I should have done it the first time.
+
 2-19-06
 Fixed a bug in the number of local results
 Added feature to allow results to show in seperate window
