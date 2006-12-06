@@ -1,30 +1,19 @@
-Description: mw is an interface to http://www.m-w.com My original script was in perl and only worked in xchat.  Rather then include it in the xchat script I've gone with a seperate module.  It should work with anything else.
+Description: weather is an interface to http://www.weather.com My original script was in perl and only worked in xchat.  Rather then include it in the xchat script I've gone with a seperate module.  It should work with anything else.
 
-Installation: pythong setup.py install
+Installation: python setup.py install
 
-Usage: There is one “public” method getdef.  It should always be passed a string.  Depending on the results you will get back a dictionary, a list, or string as a result.
+Usage: There is one "public" method getweather.  It should always be passed a string.  Depending on the results you will get back a dictionary or string.
 
-from mw import *
+from weather import *
 
-a = getdef(“chomp”)
+getweather("90210")
+{'City': 'Local Forecast for Beverly Hills, CA (90210)', 'UV Index': '0 Low', 'Temp': '56FFeels Like 56F', 'Visibility': '9.0 miles', 'Humidity': '90%', 'Pressure': '29.76in.', 'Pressure:': '', 'Dew Point': '53F', 'Wind': 'From N at 11 mph'}
 
-When a definition is found a dictionary with these keys will be returned:
-['Etymology:', 'Usage:', 'Pronunciation:', 'Definition:', 'Function:', 'Inflected Form(s):', 'Main Entry:'].  The 'Definition:' key will contain a list of the definitions
+getweather("9021") or getweather('chicago')
+If less then 5 digits or non numbers are input an exception is raised
 
-{'Etymology:': 'Etymology:alteration of champ', 'Usage:': '', 'Pronunciation:': "Pronunciation:'chmp, 'chomp", 'Definition:': ['intransitive senses : to chew or bite on something', 'transitive senses : to chew or bite on'], 'Function:': 'Function:verb', 'Inflected Form(s):': '', 'Main Entry:': 'Main Entry:chomp '}
-
-Sometimes keys like 'Usage:', 'Inflected Form(s):', and 'Eytymology:' will be empty.
-
-When your word is not found and suggestions are given a list will be returned:
-
-a = getdef(“bork”)
-
-[' 1. broke', ' 2. Brook', ' 3. Brooke', ' 4. bark', ' 5. boric', ' 6. burke', ' 7. Burke', ' 8. brook', ' 9. Burk', '10. brock', '11. Bors', '12. bore', '13. bort', '14. born']
-
-When no word is found and no suggestions are given a string will be returned:
-
-'No definition or suggestions returned'
+getweather("33333")
+If the zipcode is invalid a string saying "Check Zip" will be returned
 
 License GPL
-Last modified 2-6-05
-
+Last modified 2-11-05

@@ -1,6 +1,6 @@
 #!/usr/bin/python
 __module_name__ = "Cancel's WeatherBot"
-__module_version__ = "2.0.1" 
+__module_version__ = "2.0.2" 
 __module_description__ = "WeatherBot by Cancel"
 
 import xchat

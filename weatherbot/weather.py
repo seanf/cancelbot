@@ -49,7 +49,7 @@ def getweather(zipcode):
                "Pressure":'', "Dew Point":'', "Visibility":''}
     stripper = __Stripper()
     nonefound = "No items found"
-    city = "Local Forecast for"
+    city = "<TITLE>Local Weather Forecast for"
     temp = "Feels Like"
     uv = "UV Index:"
     wind = "Wind:"
@@ -113,4 +113,4 @@ def getweather(zipcode):
         print args
         return args
 
-#Last edited 3-8-06
+#Last edited 12-5-06
