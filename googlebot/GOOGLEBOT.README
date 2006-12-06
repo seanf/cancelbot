@@ -13,7 +13,7 @@ For local usage
 /google query word or phrase
 /google spell word or phrase
 
-pygoogle bust be installed by untarring and doing python setup.py install
+pygoogle must be installed by untarring and doing python setup.py install
 googlebot.ini and googlebot.py MUST GO IN YOUR ~/.xchat2
 
 Explanation of the lines in the ini file.
@@ -44,4 +44,4 @@ This option says wether you should say your results in the channel tab you're on
 returnintab = True
 
 License GPL
-8-23-06
+11-25-06
