@@ -1,12 +1,14 @@
 #!/usr/bin/python
 __module_name__ = "Cancel's BibleBot" 
-__module_version__ = "2.0.1" 
+__module_version__ = "2.1.0" 
 __module_description__ = "BibleBot by Cancel"
 
 import xchat
 import os
 import re
 import string
+import threading
+import ConfigParser
 
 print "\0034",__module_name__, __module_version__,"has been loaded\003"
 
@@ -16,6 +18,7 @@ versions = {}
 vcolor = ""
 bcolor = ""
 xchatdir = xchat.get_info("xchatdir")
+inifile = os.path.join(xchatdir, "biblebot.ini")
 color = {"white":"\0030", "black":"\0031", "blue":"\0032", "green":"\0033", "red":"\0034",
 "dred":"\0035", "purple":"\0036", "dyellow":"\0037", "yellow":"\0038", "bgreen":"\0039",
 "dgreen":"\00310", "green":"\00311", "blue":"\00312", "bpurple":"\00313", "dgrey":"\00314",
@@ -26,21 +29,28 @@ color = {"white":"\0030", "black":"\0031", "blue":"\0032", "green":"\0033", "red
 def load_vars():
     global option, versions, vcolor, bcolor
     try:
-        inifile = open(os.path.join(xchatdir, "biblebot.ini"), "r")
-        line = inifile.readline() #The first line is a comment
-        line = inifile.readline()
-        while line != "":
-            par1, par2 = re.split("=", line)
-            option[par1] = string.strip(par2)
-            line = inifile.readline()
-        inifile.close
+        config = ConfigParser.ConfigParser()
+        infile = open(inifile)
+        config.readfp(infile)
+        infile.close()
         
-        option["verselimit"] = int(option["verselimit"])
-        option["searchlimit"] = int(option["searchlimit"])
+        #Parse main
+        for item in config.items("main"):
+            option[item[0]] = item[1]
+            
+        #bools and ints
+        option["service"] = config.getboolean("main", "service")
+        option["advertise"] = config.getboolean("main", "advertise")
+        option["verselimit"] = config.getint("main", "verselimit")
+        option["searchlimit"] = config.getint("main", "searchlimit")
+        option["locallimit"] = config.getint("main", "locallimit")
+        option["cleanup"] = config.getboolean("main", "cleanup")
+        option["cleanuptime"] = config.getint("main", "cleanuptime")
+        
         bcolor = color[option["bookcolor"]]
         vcolor = color[option["versecolor"]]
-        if option["cleanup"] == "yes":
-            option["cleanuptime"] = int(option["cleanuptime"]) * 60000
+        if option["cleanup"]:
+            option["cleanuptime"] = option["cleanuptime"] * 60000
             xchat.hook_timer(option["cleanuptime"], cleanup)
         print color["dgreen"], "CancelBot Biblebot biblebot.ini Load Success"
     
@@ -87,7 +97,7 @@ def get_text(trigger, destination):
         infile = open(infile, "r")
             
     except EnvironmentError:
-        destination.command("say All books are "+color["blue"]+"3"+color["close"]+" characters. Check syntax and try again")
+        destination.command("say All books are " + color["blue"] + "3" + color["close"] + " characters. Check syntax and try again")
         return
     
     line = string.rstrip(infile.readline())
@@ -95,7 +105,7 @@ def get_text(trigger, destination):
     
     while versecount > 0 and position != infile.tell():
         if re.match(passage, line):
-            destination.command("say "+bcolor+""+version+" "+vcolor+""+book+""+color["close"]+" "+line+"")
+            destination.command("say " + bcolor + version + " " + vcolor + book + color["close"] + " " + line)
             versecount = versecount - 1
             firstverse = int(firstverse) + 1
             passage = str(chapter) + ':' + str(firstverse)
@@ -108,7 +118,7 @@ def get_search(version, phrase, destination):
         searchpath = os.path.join(option["bibleroot"], version)        
         os.chdir(searchpath)
         phrase = string.join(phrase, ' ')
-        grep = os.popen("grep -i \""+phrase+"\" *").readlines()
+        grep = os.popen("grep -i \"" + phrase + "\" *").readlines()
         found = len(grep)
         searchcount = 0
 
@@ -116,26 +126,26 @@ def get_search(version, phrase, destination):
         return
 
     if found == 0:
-        xchat.command("msg "+destination+" No matches for \""+phrase+"\" found")
+        xchat.command("msg " + destination + " No matches for \"" + phrase + "\" found")
         return
         
     for i in grep:
         i = string.strip(i)
         if searchcount == option["searchlimit"]:
-            xchat.command("msg "+destination+" Search limit is "+str(option["searchlimit"])+" matches maybe try !searchbybook")
+            xchat.command("msg " + destination + " Search limit is " + str(option["searchlimit"]) + " matches maybe try !searchbybook")
             break
-        xchat.command("msg "+destination+" "+color["red"]+""+version+""+color["close"]+" "+i+"")
+        xchat.command("msg " + destination + " " + color["red"] + version + color["close"] + " " + i)
         searchcount = searchcount + 1
     
-    xchat.command("msg "+destination+" \""+phrase+"\" was found a total of "+str(found)+" time(s)")
+    xchat.command("msg " + destination + " \"" + phrase + "\" was found a total of " + str(found) + " time(s)")
     
     
 def get_searchbybook(version, book, phrase, destination):
     try:
-        searchpath = (option["bibleroot"] + "/" + version)        
+        searchpath = os.path.join(option["bibleroot"], version)        
         os.chdir(searchpath)
         phrase = string.join(phrase, ' ')
-        grep = os.popen("grep -i \""+phrase+"\" "+book+"").readlines()
+        grep = os.popen("grep -i \"" + phrase + "\" " + book).readlines()
         found = len(grep)
         searchcount = 0
 
@@ -143,18 +153,18 @@ def get_searchbybook(version, book, phrase, destination):
         return
 
     if found == 0:
-        xchat.command("msg "+destination+" No matches for \""+phrase+"\" found")
+        xchat.command("msg " + destination + " No matches for \"" + phrase + "\" found")
         return
         
     for i in grep:
         i = string.strip(i)
         if searchcount == option["searchlimit"]:
-            xchat.command("msg "+destination+" Search limit is "+str(option["searchlimit"])+" matches")
+            xchat.command("msg " + destination + " Search limit is " + str(option["searchlimit"]) + " matches")
             break
-        xchat.command("msg "+destination+" "+color["red"]+""+version+""+color["close"]+" "+book+" "+i+"")
+        xchat.command("msg " + destination + " " + color["red"] + version + color["close"] + " " + book + " " + i)
         searchcount = searchcount + 1
     
-    xchat.command("msg "+destination+" \""+phrase+"\" was found a total of "+str(found)+" time(s) in "+book+"")
+    xchat.command("msg " + destination + " \"" + phrase + "\" was found a total of " + str(found) + " time(s) in " + book)
     
 
 def play_file(file, destination):
@@ -162,7 +172,7 @@ def play_file(file, destination):
         infile = open(file,"r")
         
     except EnvironmentError:
-        print color["red"], "Could not open "+file+".  Check permisions or biblebot.ini"
+        print color["red"], "Could not open " + file + ".  Check permisions or biblebot.ini"
         return
     
     position = "a"
@@ -170,7 +180,7 @@ def play_file(file, destination):
     while position != infile.tell():
         position = infile.tell()
         line = string.strip(infile.readline())
-        xchat.command("msg "+destination+" "+line+"")
+        xchat.command("msg " + destination + " " + line)
     infile.close()
 
 def get_list(version, destination):
@@ -181,69 +191,67 @@ def get_list(version, destination):
         print color["red"], "Could not get directory list.  Check permisions or biblebot.ini"
         return
         
-    xchat.command("msg "+destination+" "+color["red"]+""+version+""+color["close"]+" "+books+"")
+    xchat.command("msg " + destination + " " + color["red"] + version + color["close"] + " " + books)
         
 def on_text(word, word_eol, userdata):
     destination = xchat.get_context()    
     triggernick = word[0]
     trigger = re.split(' ',string.lower(word[1]))
     
-    if option["service"] == "on":
+    if option["service"] == True:
         if trigger[0] in versions:
-            get_text(trigger[:3], destination)
+            threading.Thread(target=get_text, args=(trigger[:3], destination)).start()
     
         if trigger[0] == '!search' and trigger[1] in versions:
-            get_search(trigger[1], trigger[2:], triggernick)
+            threading.Thread(target=get_search, args=(trigger[1], trigger[2:], triggernick)).start()
             
         if trigger[0] == '!searchbybook' and trigger[1] in versions:
-            get_searchbybook(trigger[1], trigger[2], trigger[3:], triggernick)
+            threading.Thread(target=get_searchbybook, args=(trigger[1], trigger[2], trigger[3:], triggernick)).start()
         
         if trigger[0] == '!help':
-            play_file(option["helpfile"], triggernick)
+            threading.Thread(target=play_file, args=(option["helpfile"], triggernick)).start()
         
         if trigger[0] == '!rules':
-            play_file(option["rulesfile"], triggernick)
+            threading.Thread(target=play_file, args=(option["rulesfile"], triggernick)).start()
         
         if trigger[0] == '!versions':
-            play_file(option["versionfile"], triggernick)
+            threading.Thread(target=play_file, args=(option["versionfile"], triggernick)).start()
         
         if trigger[0] == '!list' and trigger[1] in versions:
-            get_list(trigger[1], triggernick)
+            threading.Thread(target=get_list, args=(trigger[1], triggernick)).start()
     
 def pvt_request(word, word_eol, userdata):
     destination = xchat.get_context()
     triggernick = word[0]
     trigger = re.split(' ',string.lower(word[1]))
 
-    if option["service"] == "on":
-        if trigger[0] in versions and option["service"] == "on":
-            get_text(trigger[:3], destination)
+    if option["service"] == True:
+        if trigger[0] in versions and option["service"] == True:
+            threading.Thread(target=get_text, args=(trigger[:3], destination)).start()
     
         if trigger[0] == '!search' and trigger[1] in versions:
-            get_search(trigger[1], trigger[2:], triggernick)
+            threading.Thread(target=get_search, args=(trigger[1], trigger[2:], triggernick)).start()
             
         if trigger[0] == '!searchbybook' and trigger[1] in versions:
-            get_searchbybook(trigger[1], trigger[2], trigger[3:], triggernick)
+            threading.Thread(target=get_searchbybook, args=(trigger[1], trigger[2], trigger[3:], triggernick)).start()
         
         if trigger[0] == '!help':
-            play_file(option["helpfile"], triggernick)
+            threading.Thread(target=play_file, args=(option["helpfile"], triggernick)).start()
         
         if trigger[0] == '!rules':
-            play_file(option["rulesfile"], triggernick)
+            threading.Thread(target=play_file, args=(option["rulesfile"], triggernick)).start()
         
         if trigger[0] == '!versions':
-            play_file(option["versionfile"], triggernick)
+            threading.Thread(target=play_file, args=(option["versionfile"], triggernick)).start()
         
         if trigger[0] == '!list' and trigger[1] in versions:
-            get_list(trigger[1], triggernick)
+            threading.Thread(target=get_list, args=(trigger[1], triggernick)).start()
     
 def on_join(word, word_eol, userdata):
     triggernick = word[0]
     triggerchannel = word[1]
-    if option["advertise"] == "yes" and triggerchannel in option["advertisein"]:
-        xchat.command("notice "+triggernick+" "+option["advertisetext"]+"")
-    
-    return xchat.EAT_NONE
+    if option["advertise"] == True and triggerchannel in option["advertisein"]:
+        xchat.command("notice " + triggernick + " " + option["advertisetext"])
 
 def bible(word, word_eol, userdata):
     try:
@@ -269,20 +277,20 @@ def bible(word, word_eol, userdata):
                     versecount = 1
         
     except Exception, args:
-        return
+        return xchat.EAT_ALL
     
     try:
         infile = os.path.join(option["bibleroot"], version, book)
         infile = open(infile, "r")
             
     except Exception, args:
-        return
+        return xchat.EAT_ALL
     
     line = string.rstrip(infile.readline())
     position = "a"
     while versecount >= 1 and position != infile.tell():
         if re.match(passage, line):
-            print(""+bcolor+""+version+" "+vcolor+""+book+""+color["close"]+" "+line+"")
+            print(bcolor + version + " " + vcolor + book + color["close"] + " " + line)
             versecount = versecount - 1
             firstverse = int(firstverse) + 1
             passage = str(chapter) + ":" + str(firstverse)
@@ -298,15 +306,15 @@ def search(word, word_eol, data):
         searchpath = os.path.join(option["bibleroot"], version)
         os.chdir(searchpath)
         phrase = string.join(word[2:], ' ')
-        grep = os.popen("grep -i \""+phrase+"\" *").readlines()
+        grep = os.popen("grep -i \"" + phrase + "\" *").readlines()
         found = len(grep)
         searchcount = 0
 
     except Exception, args:
-        return
+        return xchat.EAT_ALL
 
     if found == 0:
-        print("No matches for \""+phrase+"\" found")
+        print("No matches for \"" + phrase + "\" found")
         return xchat.EAT_ALL
         
     for i in grep:
@@ -317,7 +325,7 @@ def search(word, word_eol, data):
         print(color["red"] + version + color["close"] + " " +i)
         searchcount = searchcount + 1
     
-    print("\""+phrase+"\" was found a total of "+str(found)+" time(s)")
+    print("\"" + phrase + "\" was found a total of " + str(found) + " time(s)")
     
     return xchat.EAT_ALL
 
@@ -336,4 +344,4 @@ xchat.hook_print('Join', on_join)
 xchat.hook_command('bible', bible)
 xchat.hook_command('search', search)
 #LICENSE GPL
-#Last modified 02-18-06
+#Last modified 12-13-06
