@@ -1,3 +1,6 @@
+12-14-06 2.2.0
+Added thread support.  Queries are threaded so other users and queries aren't blocked.
+
 10-24-06 2.1.1
 Fixed the way results in a seperate tab is generated. How I should have done it the first time.
 

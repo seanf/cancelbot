@@ -1,6 +1,8 @@
+12-14-06 2.2.0
+Added thread support.  Queries are threaded so other users and queries aren't blocked.
+
 2-17-06
 Changed ini file to use ConfigParser
-
 
 3-21-05
 Added EAT_XCHAT to local commands so they aren't sent to servers.  Pointed out by Kees Bergwerf.

@@ -19,7 +19,7 @@
 #    59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             #
 ############################################################################
 __module_name__ = "Cancel's GoogleBot"
-__module_version__ = "2.1.1" 
+__module_version__ = "2.2.0" 
 __module_description__ = "GoogleBot by Cancel"
 
 import xchat
@@ -28,6 +28,7 @@ import ConfigParser
 import re
 import string
 import HTMLParser
+import threading
 import google
 
 print "\0034",__module_name__, __module_version__,"has been loaded\003"
@@ -86,9 +87,9 @@ def on_text(word, word_eol, userdata):
     trigger = re.split(' ',word[1].lower())
     
     if trigger[0] == '!google' and option["service"] == True:
-        google_query(string.join(trigger[1:]), option["publiclimit"], destination)
+        threading.Thread(target=google_query, args=(string.join(trigger[1:]), option["publiclimit"], destination)).start()
     if trigger[0] == '!spell' or trigger[0] == '!spelling' and option["service"] == True:
-        google_spelling(string.join(trigger[1:]), destination)
+        threading.Thread(target=google_spelling, args=(string.join(trigger[1:]), destination)).start()
             
 def on_pvt(word, word_eol, userdata):
     destination = xchat.get_context()
@@ -96,9 +97,9 @@ def on_pvt(word, word_eol, userdata):
     trigger = re.split(' ',word[1].lower())
     
     if trigger[0] == '!google' and option["service"] == True:
-        google_query(string.join(trigger[1:]), option["privatelimit"], destination)
+        threading.Thread(target=google_query, args=(string.join(trigger[1:]), option["privatelimit"], destination)).start()
     if trigger[0] == '!spell' or trigger[0] == '!spelling' and option["service"] == True:
-        google_spelling(string.join(trigger[1:]), destination)
+        threading.Thread(target=google_spelling, args=(string.join(trigger[1:]), destination)).start()
     
 def google_query(query, searchlimit, destination):
     try:
@@ -138,9 +139,9 @@ def local_google(word, word_eol, userdata):
     else:
         destination = xchat.get_context()
     if word[1] == 'query':
-        google_query(word_eol[2], option["locallimit"], destination)
+        threading.Thread(target=google_query, args=(word_eol[2], option["locallimit"], destination)).start()
     if word[1] == 'spell' or word[1] == 'spelling':
-        google_spelling(word_eol[2], destination)
+        threading.Thread(target=google_spelling, args=(word_eol[2], destination)).start()
         
     return xchat.EAT_ALL
 
@@ -152,4 +153,4 @@ xchat.hook_print('Private Message to Dialog', on_pvt)
 xchat.hook_command('google', local_google, help="/google query what to lookup or /google spell word to check")
 
 #LICENSE GPL
-#Last modified 10-24-06
+#Last modified 12-14-06

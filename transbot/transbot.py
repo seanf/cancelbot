@@ -19,7 +19,7 @@
 #    59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             #
 ############################################################################
 __module_name__ = "Cancel's TransBot"
-__module_version__ = "2.1.0" 
+__module_version__ = "2.2.0" 
 __module_description__ = "TransBot by Cancel"
 
 #---Imports---#000000#FFFFFF----------------------------------------------------
@@ -28,6 +28,7 @@ import os
 import ConfigParser
 import re
 import string
+import threading
 import translator
 
 print "\0034",__module_name__, __module_version__,"has been loaded\003"
@@ -62,11 +63,9 @@ def load_vars():
         option["autotranslate"] = config.getboolean("main", "autotranslate")
         #Parse autotranslators
         for item in config.items("autotranslators"):
-            autotranslator[item[0]] = item[1]
-        for key in autotranslator:
-            autotranslator[key] = re.split(' ', autotranslator[key])
-            autotranslator[key] = translator.Translator(autotranslator[key][0], autotranslator[key][1])
-        
+            source, destination = re.split(' ', item[1])
+            autotranslator[item[0]] = translator.Translator(source, destination)
+
         print color["dgreen"], "CancelBot TransBot transbot.ini Load Success"
             
     except EnvironmentError:
@@ -100,14 +99,14 @@ def on_text(word, word_eol, userdata):
     trigger = re.split(' ',word[1].lower())
     
     if trigger[0] == '!translate' and option["service"] == True:
-        translate(trigger[1], trigger[2], string.join(trigger[3:],' '), destination)
+        threading.Thread(target=translate, args=(trigger[1], trigger[2], string.join(trigger[3:],' '), destination)).start()
         
     if trigger[0] == '!translators' and option["service"] == True:
-        translators(destination)
+        threading.Thread(target=translators, args=(destination)).start()
         
     if option["autotranslate"] == True:
         if autotranslator.has_key(triggernick):
-            print color["blue"], "<"+triggernick+">", autotranslator[triggernick].translate(string.join(trigger,' '))
+            threading.Thread(target=autotranslation, args=(triggernick, trigger)).start()
 
 def on_pvt(word, word_eol, userdata):
     destination = xchat.get_context()
@@ -115,14 +114,14 @@ def on_pvt(word, word_eol, userdata):
     trigger = re.split(' ',word[1].lower())
     
     if trigger[0] == '!translate' and option["service"] == True:
-        translate(trigger[1], trigger[2], string.join(trigger[3:],' '), destination)
+        threading.Thread(target=translate, args=(trigger[1], trigger[2], string.join(trigger[3:],' '), destination)).start()
         
     if trigger[0] == '!translators' and option["service"] == True:
-        translators(destination)
+        threading.Thread(target=translators, args=(destination)).start()
 
     if option["autotranslate"] == True:
         if autotranslator.has_key(triggernick):
-            print color["blue"], "<"+triggernick+">", autotranslator[triggernick].translate(string.join(trigger,' '))
+            threading.Thread(target=autotranslation, args=(triggernick)).start()
 
 def translate(source, dest, text, destination):
     try:
@@ -136,7 +135,10 @@ def translate(source, dest, text, destination):
     except Exception, args:
         print color["red"], Exception, args
         return
-        
+
+def autotranslation(triggernick, trigger):
+    print color["blue"], "<"+triggernick+">", autotranslator[triggernick].translate(string.join(trigger,' '))
+            
 def translators(destination):
     pairs = str(translator.get_pairs())
     destination.command("say Available methods are " + pairs)
@@ -190,18 +192,8 @@ def local_trans(word, word_eol, userdata):
         print "Available methods are:", color["blue"], str(translator.get_pairs())
         
     else:
-        try:
-            a = translator.Translator(word[1], word[2])
-            response = a.translate(word_eol[3])
-            destination.command("say " + response)
-            
-        except KeyError, args:
-            print color["red"] + str(args) + color["close"] + " is not a valid language. Try /trans translators"
-            
-        except Exception, args:
-            print color["red"], Exception, args
-            return
-    
+        threading.Thread(target=translate, args=(word[1], word[2], word_eol[3], destination)).start()    
+
     return xchat.EAT_ALL
    
 load_vars()
@@ -213,4 +205,4 @@ xchat.hook_command('autotranslate', autotranslate, help="see the README")
 xchat.hook_command('trans', local_trans, help="see the README")
 
 #LICENSE GPL
-#Last modified 2-16-06
+#Last modified 12-14-06

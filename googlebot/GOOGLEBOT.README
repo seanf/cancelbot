@@ -18,9 +18,7 @@ googlebot.ini and googlebot.py MUST GO IN YOUR ~/.xchat2
 
 Explanation of the lines in the ini file.
 
-One of the seemingly inconsequential but biggest changes in my scripts is taking the variables out of the script an putting them all in their own file.  It doesn't matter what order they are in in the file just that they are there.  One option per line.  Make special note not to remove the first commented line.
-
-#This is the ini file for Cancel's GoogleBot. One option per line. Do not delete this line.
+One of the seemingly inconsequential but biggest changes in my scripts is taking the variables out of the script an putting them all in their own file.  It doesn't matter what order they are in in the file just that they are there.  One option per line.
 
 This option tells the bot if it should service others.  Local usage is always on.
 service = True
@@ -40,8 +38,8 @@ locallimit = 8
 This option turns off or on the safesearch field of the google api request
 safesearch = 1
 
-This option says wether you should say your results in the channel tab you're onor in a seperate window
+This option says wether you should say your results in the channel tab you're onor in a seperate window.  If you are using it as a bot for a channel set to False.
 returnintab = True
 
 License GPL
-11-25-06
+12-14-06
