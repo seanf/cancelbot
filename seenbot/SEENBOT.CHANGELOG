@@ -1,3 +1,7 @@
+12-27-06 2.2.0
+Can now private message for a !seen
+Now records last time user spoke in channel
+
 2-7-06 2.1.0
 Cleaned some things up
 Added regex searching

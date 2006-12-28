@@ -1,6 +1,6 @@
 #!/usr/bin/python
 __module_name__ = "Cancel's SeenBot"
-__module_version__ = "2.1" 
+__module_version__ = "2.2.0" 
 __module_description__ = "SeenBot by Cancel"
 
 print "\0034",__module_name__, __module_version__,"has been loaded\003"
@@ -130,6 +130,10 @@ def on_text(word, word_eol, userdata):
     triggernick = word[0]
     trigger = re.split(' ', word[1].lower())
     
+    key = triggernick.lower()
+    seen[key] = [triggernick + " was last seen " + time.ctime() + " talking in " + triggerchannel, int(time.time())]
+    seen.sync()
+    
     if option["service"] == True and trigger[0] == "!seen" and triggerchannel not in option["notin"]:
         if seen.has_key(trigger[1]):
             destination.command("say " + seen[trigger[1]][0])
@@ -209,6 +213,21 @@ def command_seendump(word, word_eol, userdata):
     
     return xchat.EAT_ALL
 
+def on_pvt(word, word_eol, userdata):
+    destination = xchat.get_context()
+    triggernick = word[0].lower()
+    trigger = re.split(' ',word[1].lower())
+    
+    if option["service"] == True and trigger[0] == "!seen":
+        if seen.has_key(trigger[1]):
+            destination.command("say " + seen[trigger[1]][0])
+    
+    elif option["service"] == True and trigger[0] == "!seensearch":
+        results = seensearch(string.join(trigger[1:]), option["searchlimit"])
+        if results:
+            for result in results:
+                destination.command("say " + result)
+    
 load_vars()
     
 #---Hooks---#000000#FFFFFF------------------------------------------------------
@@ -222,9 +241,10 @@ xchat.hook_print('Quit', on_quit)
 xchat.hook_print('Channel Operator', on_op)
 xchat.hook_print('Channel DeOp', on_deop)
 xchat.hook_print('Channel Message', on_text)
+xchat.hook_print('Private Message to Dialog', on_pvt)
 xchat.hook_command('seen', command_seen, help="Local /seen nick , remote !seen nick")
 xchat.hook_command('seensearch', command_seensearch, help="Local /seensearch phrase , remote !seensearch phrase")
 xchat.hook_command('seencount', command_seencount, help="Merely gives total count of records in the seen db")
 xchat.hook_command('seenpurge', command_seenpurge, help="Do /seenpurge 30, that will purge all records over 30 days old")
 xchat.hook_command('seendump', command_seendump, help="Dumps the database to a text file in your xchatdir")
-#Last modified 2-7-06
+#Last modified 12-27-06
