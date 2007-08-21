@@ -1,6 +1,6 @@
 #!/usr/bin/python
 __module_name__ = "Cancel's BibleBot" 
-__module_version__ = "2.1.0" 
+__module_version__ = "2.1.1" 
 __module_description__ = "BibleBot by Cancel"
 
 import xchat
@@ -23,7 +23,7 @@ color = {"white":"\0030", "black":"\0031", "blue":"\0032", "green":"\0033", "red
 "dred":"\0035", "purple":"\0036", "dyellow":"\0037", "yellow":"\0038", "bgreen":"\0039",
 "dgreen":"\00310", "green":"\00311", "blue":"\00312", "bpurple":"\00313", "dgrey":"\00314",
 "lgrey":"\00315", "close":"\003"}
-
+invalid = re.compile('[`~>|</]', re.I)
 
 #functions go here
 def load_vars():
@@ -118,6 +118,8 @@ def get_search(version, phrase, destination):
         searchpath = os.path.join(option["bibleroot"], version)        
         os.chdir(searchpath)
         phrase = string.join(phrase, ' ')
+        if invalid.search(phrase):
+            return
         grep = os.popen("grep -i \"" + phrase + "\" *").readlines()
         found = len(grep)
         searchcount = 0
@@ -145,6 +147,8 @@ def get_searchbybook(version, book, phrase, destination):
         searchpath = os.path.join(option["bibleroot"], version)        
         os.chdir(searchpath)
         phrase = string.join(phrase, ' ')
+        if invalid.search(pharse):
+           return
         grep = os.popen("grep -i \"" + phrase + "\" " + book).readlines()
         found = len(grep)
         searchcount = 0
@@ -200,24 +204,31 @@ def on_text(word, word_eol, userdata):
     
     if option["service"] == True:
         if trigger[0] in versions:
+            #get_text(trigger[:3], destination)
             threading.Thread(target=get_text, args=(trigger[:3], destination)).start()
     
         if trigger[0] == '!search' and trigger[1] in versions:
+            #get_search(trigger[1], trigger[2:], triggernick)
             threading.Thread(target=get_search, args=(trigger[1], trigger[2:], triggernick)).start()
             
         if trigger[0] == '!searchbybook' and trigger[1] in versions:
+            #get_searchbybook(trigger[1], trigger[2], trigger[3:], triggernick)
             threading.Thread(target=get_searchbybook, args=(trigger[1], trigger[2], trigger[3:], triggernick)).start()
         
         if trigger[0] == '!help':
+            #play_file(option["helpfile"], triggernick)
             threading.Thread(target=play_file, args=(option["helpfile"], triggernick)).start()
         
         if trigger[0] == '!rules':
+            #play_file(option["rulesfile"], triggernick)
             threading.Thread(target=play_file, args=(option["rulesfile"], triggernick)).start()
         
         if trigger[0] == '!versions':
+            #play_file(option["versionfile"], triggernick)
             threading.Thread(target=play_file, args=(option["versionfile"], triggernick)).start()
         
         if trigger[0] == '!list' and trigger[1] in versions:
+            #get_list(trigger[1], triggernick)
             threading.Thread(target=get_list, args=(trigger[1], triggernick)).start()
     
 def pvt_request(word, word_eol, userdata):
@@ -227,24 +238,31 @@ def pvt_request(word, word_eol, userdata):
 
     if option["service"] == True:
         if trigger[0] in versions and option["service"] == True:
+            #get_text(trigger[:3], destination)
             threading.Thread(target=get_text, args=(trigger[:3], destination)).start()
     
         if trigger[0] == '!search' and trigger[1] in versions:
+            #get_search(trigger[1], trigger[2:], triggernick)
             threading.Thread(target=get_search, args=(trigger[1], trigger[2:], triggernick)).start()
             
         if trigger[0] == '!searchbybook' and trigger[1] in versions:
+            #get_searchbybook(trigger[1], trigger[2], trigger[3:], triggernick)
             threading.Thread(target=get_searchbybook, args=(trigger[1], trigger[2], trigger[3:], triggernick)).start()
         
         if trigger[0] == '!help':
+            #play_file(option["helpfile"], triggernick)
             threading.Thread(target=play_file, args=(option["helpfile"], triggernick)).start()
         
         if trigger[0] == '!rules':
+            #play_file(option["rulesfile"], triggernick)
             threading.Thread(target=play_file, args=(option["rulesfile"], triggernick)).start()
         
         if trigger[0] == '!versions':
+            #play_file(option["versionfile"], triggernick)
             threading.Thread(target=play_file, args=(option["versionfile"], triggernick)).start()
         
         if trigger[0] == '!list' and trigger[1] in versions:
+            #get_list(trigger[1], triggernick)
             threading.Thread(target=get_list, args=(trigger[1], triggernick)).start()
     
 def on_join(word, word_eol, userdata):
@@ -344,4 +362,4 @@ xchat.hook_print('Join', on_join)
 xchat.hook_command('bible', bible)
 xchat.hook_command('search', search)
 #LICENSE GPL
-#Last modified 12-13-06
+#Last modified 08-21-07

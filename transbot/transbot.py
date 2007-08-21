@@ -19,7 +19,7 @@
 #    59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             #
 ############################################################################
 __module_name__ = "Cancel's TransBot"
-__module_version__ = "2.2.0" 
+__module_version__ = "2.2.1" 
 __module_description__ = "TransBot by Cancel"
 
 #---Imports---#000000#FFFFFF----------------------------------------------------
@@ -102,7 +102,8 @@ def on_text(word, word_eol, userdata):
         threading.Thread(target=translate, args=(trigger[1], trigger[2], string.join(trigger[3:],' '), destination)).start()
         
     if trigger[0] == '!translators' and option["service"] == True:
-        threading.Thread(target=translators, args=(destination)).start()
+        #threading.Thread(target=translators, args=(destination)).start()
+        translators(destination)
         
     if option["autotranslate"] == True:
         if autotranslator.has_key(triggernick):
@@ -117,7 +118,8 @@ def on_pvt(word, word_eol, userdata):
         threading.Thread(target=translate, args=(trigger[1], trigger[2], string.join(trigger[3:],' '), destination)).start()
         
     if trigger[0] == '!translators' and option["service"] == True:
-        threading.Thread(target=translators, args=(destination)).start()
+        #threading.Thread(target=translators, args=(destination)).start()
+	translators(destination)
 
     if option["autotranslate"] == True:
         if autotranslator.has_key(triggernick):
@@ -205,4 +207,4 @@ xchat.hook_command('autotranslate', autotranslate, help="see the README")
 xchat.hook_command('trans', local_trans, help="see the README")
 
 #LICENSE GPL
-#Last modified 12-14-06
+#Last modified 08-16-07

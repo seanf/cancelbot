@@ -1,6 +1,6 @@
 #!/usr/bin/python
 __module_name__ = "Cancel's OpBot"
-__module_version__ = "2.6.2" 
+__module_version__ = "2.6.3" 
 __module_description__ = "OpBot by Cancel"
 
 import xchat
@@ -346,7 +346,7 @@ def on_join(word, word_eol, userdata):
             if jointimer:
                 xchat.unhook(jointimer)
                 jointimer = None
-            jointimer = xchat.hook_timer(option["limittime"], join_limit, userdata=theciontext)
+            jointimer = xchat.hook_timer(option["limittime"], join_limit, userdata=thecontext)
 
         if option["antiflood"] == False and option["autovoice"] == True and triggerchannel in option["voicein"]:
             thecontext.command("voice " + triggernick)

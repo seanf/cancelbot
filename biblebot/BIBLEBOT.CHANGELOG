@@ -1,3 +1,6 @@
+08-21-07 2.1.1
+Added invalid charachters so the grep can't be abused to run system commands. Found by pascoe of dalnet
+
 12-13-06 2.1.0
 Added thread support so user request don't block other users while waiting to complete
 Config file now users ConfigParser. Old ini file is no longer compatible

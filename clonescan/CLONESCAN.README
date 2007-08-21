@@ -1,5 +1,6 @@
 A user on the forum asked for clone scanning.
-Only one command /clonescan in the context you are in
+/clonescan in the context you are in
+returns a list of all clones for the context
 
 License GPL
-3-7-06
+4-13-07
