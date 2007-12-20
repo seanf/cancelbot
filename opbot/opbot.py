@@ -1,6 +1,6 @@
 #!/usr/bin/python
 __module_name__ = "Cancel's OpBot"
-__module_version__ = "2.6.3" 
+__module_version__ = "2.6.4" 
 __module_description__ = "OpBot by Cancel"
 
 import xchat
@@ -215,7 +215,7 @@ def on_text(word, word_eol, userdata):
                 destination.command("voice " + string.join(trigger[1:]))
             elif option["ops"].has_key(triggernick):
                 if re.search(option["ops"][triggernick],host,re.I):
-                    destination.command("voice " + trigger[1])
+                    destination.command("voice " + string.join(trigger[1:]))
             else:
                 destination.command("devoice " + triggernick)
 
@@ -670,4 +670,4 @@ xchat.hook_print('Channel Voice', on_voice)
 xchat.hook_command('clonescan', clonescan_local, help="/clonescan")
 
 #LICENSE GPL
-#Last modified 10-16-06
+#Last modified 11-18-07
