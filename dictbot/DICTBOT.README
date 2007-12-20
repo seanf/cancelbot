@@ -1,33 +1,42 @@
 Cancel's DictBot
 
 History:
-The original BibleBot 1.0 was written in Perl.  I learned Perl specifically to write the first bot only because there wasn't one in existance.  I was very green as Perl was my first stab at programming.  The code will probably show this if you look at it. After it was said and done though the thing worked.  I also went on to write companion GoogleBot, DictBot, SeenBot, OpBot, & WeatherBot.
+The original BibleBot 1.0 was written in Perl.  I learned Perl specifically to write the first bot only because there wasn't one in existance.  I was very green as Perl was my first stab at programming.  The code will probably show this if you look at it. After it was said and done though the thing worked.  I also went on to write companion GoogleBot, DictBot, SeenBot, OpBot, & WeatherBot. DictBot was rewritten in python using m-w.com m-w.com changed their backend and rather then rewriting to scrape I found a web service for your consumption.
 
-Before using the bot you must first install the mw.py Python module.  I decided to put all of the work of getting the weather in a seperate module so if you find it useful it can be used elsewhere.  With a few lines can be turned into a command line program.  Extract the mw-01.tar.gz  Then as root python setup.py install.  Then place the dictbot.py module in your ~/.xchat2
+INSTALLATION:
+This module is based on a web service from: http://services.aonaware.com/DictService/DictService.asmx
+
+To use this service you must have SOAPpy and ZSI installed.
+http://sourceforge.net/projects/pywebsvcs
+
+Before using the bot you must first install the DictService modules.  
+Extract the DictService-1.0.0.tar.gz  Then as root python setup.py install.  Then place the dictbot.py module in your ~/.xchat2
 
 The bot may be used locally or remotely.  For uses in the channel syntax is as follows:
 
+To get a list of dictionaries
+!dictionaries
+
+To get a definition
 !define word
 
 For local usage 
 
 /define word
+/dictionaries
 
 DICTBOT.INI and DICTBOT.PY MUST GO IN YOUR ~/.xchat2
 
 Explanation of the lines in the ini file.
 
-One of the seemingly inconsequential but biggest changes in my scripts is taking the variables out of the script an putting them all in their own file.  It doesn't matter what order they are in in the file just that they are there.  One option per line.  Make special note to remove the first commented line.
-
-#This is the ini file for Cancel's DictBot. One option per line. Do not delete this line.
-
 This option tells the bot if it should service others.  Local usage is always on.
-
 service = on
 
-This option tells the bot the maxium number of definitions to return.
+This option tells the bot the maxium number of characters to return.
+charlimit = 3
 
-deflimit = 3
+This option tells the bot the default dictionary to use.
+defdict = wn
 
 License GPL
-2-06-05
+12-20-07

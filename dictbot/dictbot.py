@@ -1,6 +1,6 @@
 #!/usr/bin/python
 __module_name__ = "Cancel's DictBot"
-__module_version__ = "2.1.0" 
+__module_version__ = "3.0.0" 
 __module_description__ = "DictBot by Cancel"
 
 import xchat
@@ -8,8 +8,8 @@ import os
 import re
 import string
 import ConfigParser
-import threading
-import mw
+from DictService_client import *
+
 
 print "\0034",__module_name__, __module_version__,"has been loaded\003"
 
@@ -21,10 +21,13 @@ color = {"white":"\0030", "black":"\0031", "blue":"\0032", "green":"\0033", "red
 "dred":"\0035", "purple":"\0036", "dyellow":"\0037", "yellow":"\0038", "bgreen":"\0039",
 "dgreen":"\00310", "green":"\00311", "blue":"\00312", "bpurple":"\00313", "dgrey":"\00314",
 "lgrey":"\00315", "close":"\003"}
+dictionaries = {}
+loc = DictServiceLocator()
+port = loc.getDictServiceSoap()
 
 #the functions go here
-def load_vars():
-    global option
+def loadVars():
+    global option, proxy
     try:
         config = ConfigParser.ConfigParser()
         infile = open(inifile)
@@ -33,92 +36,113 @@ def load_vars():
         
         #Parse main
         #for item in config.items("main"):
-        #    option[item[0]] = item[1]
+            #option[item[0]] = item[1]
         option["service"] = config.getboolean("main", "service")
-        option["deflimit"] = config.getint("main", "deflimit")
+        option["charlimit"] = config.getint("main", "charlimit")
+        option["defdict"] = config.get("main", "defdict")
+        
         print color["dgreen"], "CancelBot DictBot dictbot.ini Load Success"
         
     except EnvironmentError:
         print color["red"], "Could not open dictbot.ini  put it in your " + xchatdir
 
-def on_text(word, word_eol, userdata):
+def onText(word, word_eol, userdata):
     global option
     destination = xchat.get_context()    
-    triggernick = word[0]
     trigger = re.split(' ',string.lower(word[1]))
+    triggernick = word[0]
     
     if trigger[0] == '!define' and option["service"] == True:
         lookup = string.join(trigger[1:], ' ')
-        threading.Thread(target=get_def, args=(lookup, destination)).start()
-
-def on_pvt(word, word_eol, userdata):
+        getDefinition(option["defdict"], lookup, destination)
+    
+    elif trigger[0] == '!lookin' and dictionaries.has_key(trigger[1]) and option["service"] == True:
+        dictid = trigger[1]
+        lookup = string.join(trigger[2:], ' ')
+        getDefinition(dictid, lookup, destination)
+        
+    elif trigger[0] == '!dictionaries' and option["service"] == True:
+        getDictionaries(triggernick)
+        
+def onPvt(word, word_eol, userdata):
     destination = xchat.get_context()
     triggernick = word[0]
     trigger = re.split(' ',string.lower(word[1]))
+    
     if trigger[0] == '!define' and option["service"] == True:
         lookup = string.join(trigger[1:], ' ')
-        threading.Thread(target=get_def, args=(lookup, destination)).start()
+        getDefinition(option["defdict"], lookup, destination)
     
-def get_def(lookup, destination):
-    response = mw.getdef(lookup)
-    mytype = str(type(response))
-    count = 0
-    if re.search("dict", mytype):
-        destination.command("say " + response["Main Entry:"])
-        destination.command("say " + response["Pronunciation:"])
-        destination.command("say " + response["Function:"])
-        if response["Inflected Form(s):"] != '':
-            destination.command("say " + response["Inflected Form(s):"])
-        if response["Usage:"] != '':
-            destination.command("say " + response["Usage:"])
-        if response["Etymology:"] != '':
-            destination.command("say " + response["Etymology:"])
-        for definition in response["Definition:"]:
-            if count >= option["deflimit"]:
-                destination.command("say Limit " + str(option["deflimit"]) + " definitions")
-                break
-            destination.command("say " + definition)
-            count += 1
-            
-    elif re.search("list", mytype):
-        response = string.join(response, ' ')
-        destination.command("say Nothing was found. Maybe you meant " + response)
-            
-    else:
-        destination.command("say No definition or suggestions found")
-
-def local_define(word, word_eol, userdata):
-    response = mw.getdef(word_eol[1])
-    mytype = str(type(response))
-    
-    if re.search("dict", mytype):
-        print response["Main Entry:"]
-        print response["Pronunciation:"]
-        print response["Function:"]
-        if response["Inflected Form(s):"] != '':
-            print response["Inflected Form(s):"]
-        if response["Usage:"] != '':
-            print response["Usage:"]
-        if response["Etymology:"] != '':
-            print response["Etymology:"]
-        for definition in response["Definition:"]:
-            print definition
-               
-    elif re.search("list", mytype):
-        response = string.join(response, ' ')
-        print color["red"], "Nothing was found. Maybe you meant", response
-            
-    else:
-        print response
+    elif trigger[0] == '!lookin' and dictionaries.has_key(trigger[1]) and option["service"] == True:
+        dictid = trigger[1]
+        lookup = string.join(trigger[2:], ' ')
+        getDefinition(dictid, lookup, destination)
         
+    elif trigger[0] == '!dictionaries' and option["service"] == True:
+        getDictionaries(triggernick)
+      
+def getDefinition(dictid, lookup, destination):
+    request = DefineInDictSoapIn()
+    request._dictId = dictid
+    request._word = lookup
+    response = port.DefineInDict(request)
+    if(len(response._DefineInDictResult._Definitions._Definition) == 0):
+        destination.command("say " + " nothing found check spelling or look in another dictionary using !lookin dictcode word")
+    else:
+        result = response._DefineInDictResult._Definitions._Definition[0]._WordDefinition
+        result = result.replace('\n', '')
+        result = result.replace('  ', '')
+        destination.command("say " + lookup + " in " + dictionaries[dictid])
+        if (len(result) >= option["charlimit"]):
+            destination.command("say " + result[:option["charlimit"]] + " truncated..")
+        else:
+            destination.command("say " + result)
+
+def getDictionaryList():
+    global dictionaries
+    request = DictionaryListSoapIn()
+    response = port.DictionaryList(request)
+    for dictionary in response._DictionaryListResult._Dictionary:
+        dictionaries[dictionary._Id] = dictionary._Name
+    
+def getDictionaries(triggernick):
+    for key in dictionaries.keys():
+        xchat.command("msg " + triggernick + " " + color["red"] + key + color["black"] + " " + dictionaries[key])   
+
+def localDefine(word, word_eol, userdata):
+    request = DefineInDictSoapIn()    
+    if word[0] == 'define':        
+        request._dictId = option["defdict"]
+        request._word = word[1]
+        response = port.DefineInDict(request)
+        if(len(response._DefineInDictResult._Definitions._Definition) == 0):
+            print " nothing found check spelling or look in another dictionary using !lookin dictcode word"
+        else:
+            print response._DefineInDictResult._Definitions._Definition[0]._WordDefinition
+    
+    elif word[0] == 'lookin':
+        request._dictId= word[1]
+        request._word = word[2]
+        response = port.DefineInDict(request)
+        if(len(response._DefineInDictResult._Definitions._Definition) == 0):
+            print " nothing found check spelling or look in another dictionary using !lookin dictcode word"
+        else:
+            print response._DefineInDictResult._Definitions._Definition[0]._WordDefinition
+        
+    elif word[0] == 'dictionaries':
+        for key in dictionaries.keys():
+            print key + ":" + dictionaries[key]
+    
     return xchat.EAT_ALL
 
-load_vars()
+loadVars()
+getDictionaryList()
 
 #The hooks go here
-xchat.hook_print('Channel Message', on_text)
-xchat.hook_print('Private Message to Dialog', on_pvt)
-xchat.hook_command('define', local_define)
-
+xchat.hook_print('Channel Message', onText)
+xchat.hook_print('Private Message to Dialog', onPvt)
+xchat.hook_command('define', localDefine, "usage: define word")
+xchat.hook_command('dictionaries', localDefine, "list the dictionaries")
+xchat.hook_command('lookin', localDefine,"lookin wn word")
 #LICENSE GPL
-#Last modified 02-16-05
+#Last modified 12-17-07

@@ -1,2 +1,4 @@
-mw.py
+DictService_client.py
+DictService_server.py
+DictService_types.py
 setup.py
