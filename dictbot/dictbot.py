@@ -10,7 +10,6 @@ import string
 import ConfigParser
 from DictService_client import *
 
-
 print "\0034",__module_name__, __module_version__,"has been loaded\003"
 
 #the globals go here
@@ -53,12 +52,12 @@ def onText(word, word_eol, userdata):
     triggernick = word[0]
     
     if trigger[0] == '!define' and option["service"] == True:
-        lookup = string.join(trigger[1:], ' ')
+        lookup = string.join(trigger[1:], '+')
         getDefinition(option["defdict"], lookup, destination)
     
     elif trigger[0] == '!lookin' and dictionaries.has_key(trigger[1]) and option["service"] == True:
         dictid = trigger[1]
-        lookup = string.join(trigger[2:], ' ')
+        lookup = string.join(trigger[2:], '+')
         getDefinition(dictid, lookup, destination)
         
     elif trigger[0] == '!dictionaries' and option["service"] == True:
@@ -70,12 +69,12 @@ def onPvt(word, word_eol, userdata):
     trigger = re.split(' ',string.lower(word[1]))
     
     if trigger[0] == '!define' and option["service"] == True:
-        lookup = string.join(trigger[1:], ' ')
+        lookup = string.join(trigger[1:], '+')
         getDefinition(option["defdict"], lookup, destination)
     
     elif trigger[0] == '!lookin' and dictionaries.has_key(trigger[1]) and option["service"] == True:
         dictid = trigger[1]
-        lookup = string.join(trigger[2:], ' ')
+        lookup = string.join(trigger[2:], '+')
         getDefinition(dictid, lookup, destination)
         
     elif trigger[0] == '!dictionaries' and option["service"] == True:
@@ -94,7 +93,7 @@ def getDefinition(dictid, lookup, destination):
         result = result.replace('  ', '')
         destination.command("say " + lookup + " in " + dictionaries[dictid])
         if (len(result) >= option["charlimit"]):
-            destination.command("say " + result[:option["charlimit"]] + " truncated..")
+            destination.command("say " + result[:option["charlimit"]] + " [truncated..]")
         else:
             destination.command("say " + result)
 
@@ -113,7 +112,7 @@ def localDefine(word, word_eol, userdata):
     request = DefineInDictSoapIn()    
     if word[0] == 'define':        
         request._dictId = option["defdict"]
-        request._word = word[1]
+        request._word = string.join(word_eol[1], '+')
         response = port.DefineInDict(request)
         if(len(response._DefineInDictResult._Definitions._Definition) == 0):
             print " nothing found check spelling or look in another dictionary using !lookin dictcode word"
@@ -122,7 +121,7 @@ def localDefine(word, word_eol, userdata):
     
     elif word[0] == 'lookin':
         request._dictId= word[1]
-        request._word = word[2]
+        request._word = string.join(word_eol[2], '+')
         response = port.DefineInDict(request)
         if(len(response._DefineInDictResult._Definitions._Definition) == 0):
             print " nothing found check spelling or look in another dictionary using !lookin dictcode word"
@@ -145,4 +144,4 @@ xchat.hook_command('define', localDefine, "usage: define word")
 xchat.hook_command('dictionaries', localDefine, "list the dictionaries")
 xchat.hook_command('lookin', localDefine,"lookin wn word")
 #LICENSE GPL
-#Last modified 12-17-07
+#Last modified 12-24-07
