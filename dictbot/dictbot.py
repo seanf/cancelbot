@@ -1,6 +1,6 @@
 #!/usr/bin/python
 __module_name__ = "Cancel's DictBot"
-__module_version__ = "3.0.0" 
+__module_version__ = "3.0.1" 
 __module_description__ = "DictBot by Cancel"
 
 import xchat
@@ -39,6 +39,7 @@ def loadVars():
         option["service"] = config.getboolean("main", "service")
         option["charlimit"] = config.getint("main", "charlimit")
         option["defdict"] = config.get("main", "defdict")
+        option["deflimit"] = config.getint("main", "deflimit")
         
         print color["dgreen"], "CancelBot DictBot dictbot.ini Load Success"
         
@@ -81,6 +82,7 @@ def onPvt(word, word_eol, userdata):
         getDictionaries(triggernick)
       
 def getDefinition(dictid, lookup, destination):
+    defcounter = 0
     request = DefineInDictSoapIn()
     request._dictId = dictid
     request._word = lookup
@@ -88,14 +90,19 @@ def getDefinition(dictid, lookup, destination):
     if(len(response._DefineInDictResult._Definitions._Definition) == 0):
         destination.command("say " + " nothing found check spelling or look in another dictionary using !lookin dictcode word")
     else:
-        result = response._DefineInDictResult._Definitions._Definition[0]._WordDefinition
-        result = result.replace('\n', '')
-        result = result.replace('  ', '')
-        destination.command("say " + lookup + " in " + dictionaries[dictid])
-        if (len(result) >= option["charlimit"]):
-            destination.command("say " + result[:option["charlimit"]] + " [truncated..]")
-        else:
-            destination.command("say " + result)
+        for definition in response._DefineInDictResult._Definitions._Definition:
+            defcounter += 1
+        #result = response._DefineInDictResult._Definitions._Definition[0]._WordDefinition
+            result = definition._WordDefinition
+            result = result.replace('\n', '')
+            result = result.replace('  ', '')
+            destination.command("say " + lookup + " in " + dictionaries[dictid])
+            if (len(result) >= option["charlimit"]):
+                destination.command("say " + result[:option["charlimit"]] + " [truncated..]")
+            else:
+                destination.command("say " + result)
+            if defcounter >= option["deflimit"]:
+                return
 
 def getDictionaryList():
     global dictionaries
@@ -117,7 +124,9 @@ def localDefine(word, word_eol, userdata):
         if(len(response._DefineInDictResult._Definitions._Definition) == 0):
             print " nothing found check spelling or look in another dictionary using !lookin dictcode word"
         else:
-            print response._DefineInDictResult._Definitions._Definition[0]._WordDefinition
+            for definition in response._DefineInDictResult._Definitions._Definition:
+                print definition._WordDefinition
+            #print response._DefineInDictResult._Definitions._Definition[0]._WordDefinition
     
     elif word[0] == 'lookin':
         request._dictId= word[1]
@@ -126,7 +135,9 @@ def localDefine(word, word_eol, userdata):
         if(len(response._DefineInDictResult._Definitions._Definition) == 0):
             print " nothing found check spelling or look in another dictionary using !lookin dictcode word"
         else:
-            print response._DefineInDictResult._Definitions._Definition[0]._WordDefinition
+            for definition in response._DefineInDictResult._Definitions._Definition:
+                print definition._WordDefinition
+            #print response._DefineInDictResult._Definitions._Definition[0]._WordDefinition
         
     elif word[0] == 'dictionaries':
         for key in dictionaries.keys():
