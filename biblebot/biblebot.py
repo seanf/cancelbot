@@ -148,7 +148,7 @@ def get_searchbybook(version, book, phrase, destination):
         os.chdir(searchpath)
         phrase = string.join(phrase, ' ')
         if invalid.search(pharse):
-           return
+            return
         grep = os.popen("grep -i \"" + phrase + "\" " + book).readlines()
         found = len(grep)
         searchcount = 0
