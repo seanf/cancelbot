@@ -1,0 +1,13 @@
+Takes a trigger and plays a file for the trigger.  Written by request for MaikosPlayground
+
+Turn the service off or on
+[main]
+service = True
+
+File and trigger pairs for files you wish to play
+[files]
+!blah = /home/cancelbot/.xchat2/test.txt
+!rds = /file/path/file2.txt
+
+GPL
+1-28-08
