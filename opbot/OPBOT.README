@@ -80,6 +80,12 @@ antifloodlimit = 3
 This is the time interval in minutes in which antiflood measures are tracked
 antifloodtime = 2
 
+Should the bot autoclear channel bans?
+clearbans = True
+
+The frequency and age of bans so every x minutes clear bans more then x minutes old
+clearbantime = 120
+
 Custom messages on kicks
 msgbadword = Try more appropriate language
 msgbadnick = Unacceptable nick or real name fields
@@ -147,4 +153,4 @@ Local commands
 /clonescan
 
 License GPL
-4-10-06
+2-03-08

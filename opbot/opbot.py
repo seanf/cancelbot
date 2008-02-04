@@ -1,12 +1,13 @@
 #!/usr/bin/python
 __module_name__ = "Cancel's OpBot"
-__module_version__ = "2.6.4" 
+__module_version__ = "2.7.0" 
 __module_description__ = "OpBot by Cancel"
 
 import xchat
 import os
 import re
 import string
+import time
 import ConfigParser
 
 print "\0034",__module_name__, __module_version__,"has been loaded\003"        
@@ -16,6 +17,7 @@ option = {}
 users = {}
 thecontext = ""
 checknick = ""
+clearbans = ""
 usersclean = []
 xchatdir = xchat.get_info("xchatdir")
 inifile = os.path.join(xchatdir, "opbot.ini")
@@ -46,7 +48,7 @@ class User:
         
 #---Functions---#000000#FFFFFF--------------------------------------------------        
 def load_vars():
-    global option, checknick, usersclean, caps
+    global option, checknick, usersclean, caps, clearbans
     try:
         config = ConfigParser.ConfigParser()
         infile = open(inifile)
@@ -71,11 +73,14 @@ def load_vars():
         option["antifloodlimit"] = config.getint("main", "antifloodlimit")
         option["antifloodtime"] = config.getint("main", "antifloodtime")
         option["clonescan"] = config.getboolean("main", "clonescan")
- 
+        option["clearbans"] = config.getboolean("main", "clearbans")
+        option["clearbantime"] = config.getint("main", "clearbantime")
+        
         option["opin"] = re.split(' ', option["opin"])
         option["badwords"] = re.split(' ', option["badwords"])
         option["badnicks"] = re.split(' ', option["badnicks"]) + option["badwords"]
         option["badchannels"] = re.split(' ', option["badchannels"]) + option["badwords"]
+        
         
         #Parse Akicks
         option["badhost"] = {}
@@ -105,6 +110,10 @@ def load_vars():
         if option["identify"] == True:
             option["check"] *= 60000
             checknick = xchat.hook_timer(option["check"], nick_check)
+            
+        if option["clearbans"] == True:
+            option["clearbantime"] *= 60000
+            checkbans = xchat.hook_timer(option["clearbantime"], check_bans)
         
         if option["antiflood"] == True:
             option["antifloodtime"] *=  60000
@@ -478,6 +487,26 @@ def chan_scan(userdata):
             xchat.command("whois " + user.nick)
     return 1
 
+def check_bans(userdata):
+    for chan in option["opin"]:
+        thecontext = xchat.find_context(channel=chan)
+        thecontext.command("banlist")
+    return 1
+
+def on_banlist(word, wordeol, userdata):
+    thecontext = xchat.get_context()
+    triggerchannel = word[0]
+    if triggerchannel in option["opin"] and option["clearbans"] == True:
+        banmask = word[1]
+        #time is like Sun Feb  3 12:40:12, we have to add the year
+        bantime = str(time.localtime()[0]) + " " + word[3]
+        #get us a struct_time tuple
+        bantime = time.strptime(bantime, "%Y %a %b  %d %H:%M:%S")
+        #seconds from epoch
+        bantime = time.mktime(bantime)
+        if time.time() > option["clearbantime"] /1000 + bantime:
+            thecontext.command("unban " + banmask)
+    
 def on_devoice(word, word_eol, userdata):
     thecontext = xchat.get_context()
     triggerchannel = thecontext.get_info("channel")
@@ -667,7 +696,8 @@ xchat.hook_print('WhoIs Channel/Oper Line', on_whois_channels)
 xchat.hook_print('Notice', on_notice)
 xchat.hook_print('Channel DeVoice', on_devoice)
 xchat.hook_print('Channel Voice', on_voice)
+xchat.hook_print('Ban List', on_banlist)
 xchat.hook_command('clonescan', clonescan_local, help="/clonescan")
 
 #LICENSE GPL
-#Last modified 11-18-07
+#Last modified 2-3-08
