@@ -1,3 +1,6 @@
+2-4-08 2.1.1
+Changed line in weather.py to match weather.com city
+
 12-17-06 2.1.0
 Added thread support.  Queries are threaded so other users and queries aren't blocked.
 

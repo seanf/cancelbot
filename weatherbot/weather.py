@@ -1,6 +1,6 @@
 #!/usr/bin/python
 ############################################################################
-#    Copyright (C) 2005 by JTP                                             #
+#    Copyright (C) 2008 by JTP                                             #
 #    jtpowell at hotmail dot com                                           #    
 #                                                                          #
 #    This program is free software; you can redistribute it and#or modify  #
@@ -49,7 +49,7 @@ def getweather(zipcode):
                "Pressure":'', "Dew Point":'', "Visibility":''}
     stripper = __Stripper()
     nonefound = "No items found"
-    city = "<TITLE>Local Weather Forecast for"
+    city = "<TITLE>.*</TITLE>"
     temp = "Feels Like"
     uv = "UV Index:"
     wind = "Wind:"
@@ -113,4 +113,4 @@ def getweather(zipcode):
         print args
         return args
 
-#Last edited 12-5-06
+#Last edited 2-4-08
