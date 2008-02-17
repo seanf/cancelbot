@@ -1,6 +1,6 @@
 #!/usr/bin/python
 __module_name__ = "Cancel's FilePlayer" 
-__module_version__ = "1.0.0" 
+__module_version__ = "1.1.0" 
 __module_description__ = "FilePlayer by Cancel"
 
 import xchat
@@ -45,11 +45,12 @@ def loadVars():
         print color["red"], "Could not open fileplayer.ini  put it in your " + xchatdir        
         
 def onText(word, word_eol, userdata):
-    destination = xchat.get_context()    
+    destination = xchat.get_context()
+    triggerchannel = xchat.get_info("channel")
     triggernick = word[0]
     trigger = re.split(' ',string.lower(word[1]))
     
-    if option["service"] == True:
+    if option["service"] == True and triggerchannel not in option["notin"]::
         if fileplay.has_key(trigger[0]):
             playFile(fileplay[trigger[0]], triggernick)
             
@@ -84,4 +85,4 @@ xchat.hook_print('Channel Message', onText)
 xchat.hook_print('Private Message to Dialog', pvtRequest)
 
 #LICENSE GPL
-#Last modified 1-28-08
+#Last modified 2-17-08

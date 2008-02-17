@@ -4,6 +4,9 @@ Turn the service off or on
 [main]
 service = True
 
+Rooms not to operate in
+notin = #linux
+
 File and trigger pairs for files you wish to play
 [files]
 !blah = /home/cancelbot/.xchat2/test.txt
