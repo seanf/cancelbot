@@ -50,7 +50,7 @@ def onText(word, word_eol, userdata):
     triggernick = word[0]
     trigger = re.split(' ',string.lower(word[1]))
     
-    if option["service"] == True and triggerchannel not in option["notin"]::
+    if option["service"] == True and triggerchannel not in option["notin"]:
         if fileplay.has_key(trigger[0]):
             playFile(fileplay[trigger[0]], triggernick)
             

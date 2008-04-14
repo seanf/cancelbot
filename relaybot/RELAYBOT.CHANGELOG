@@ -1,6 +1,13 @@
-11-24-05
+4-12-08 1.1.0
+New features added
+ConfigParser now used
+filter/replace added
+now supports relaying voice, devoice, kick, ban, unban, op, deop
+will relay only specific nicks
+
+11-24-05 1.0
 Added error catching if you haven't joined the destination channel
 Fixed code so you can relay two channels of same name on different network
 
-11-23-05
+11-23-05 1.0
 Initial Relase
