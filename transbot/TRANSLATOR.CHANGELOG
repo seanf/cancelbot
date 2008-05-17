@@ -1,5 +1,9 @@
-2-17-06
+1.2.0 5-16-08
+backend changes broke translator, fixed urls and regex
+putting translator.py in site-packages/cancelbot so you must delete old translator.py
+
+1.1.0 2-17-06
 Will attempt to get language pairs from site if it can't use local hash
 
-2-16-05
+1.0.0 2-16-05
 Initial release

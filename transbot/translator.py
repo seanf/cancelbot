@@ -50,7 +50,7 @@ class Translator:
         self.source = source.capitalize()
         self.destination = destination.capitalize()
         self.method = lp[self.source][self.destination]
-        self.regex = re.compile('(<div style=padding:10px;>)(.*)(</div></td>)',re.DOTALL)
+        self.regex = re.compile('<input type="hidden" name="p" value="(.+?)">',re.DOTALL)
         self.text = ''
         self.page = ''
         self.result = ''
@@ -65,19 +65,19 @@ class Translator:
             self.text = text
         
         try:
-            headers = {'Host':'babelfish.altavista.com','User-Agent':'Mozilla/5.0 (Windows; U; Windows NT 5.0; en-US; rv:1.7b) Gecko/20040316',
+            headers = {'Host':'babelfish.yahoo.com','User-Agent':'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.0.5) Gecko/20060731',
             'Accept':'text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain',
             'Accept-Language':'en-us,en;q=0.5','Accept-Charset':'utf-8',
-            'Keep-Alive':'300','Connection':'keep-alive','Referer':'http://babelfish.altavista.com/tr',
+            'Keep-Alive':'300','Connection':'keep-alive','Referer':'http://babelfish.yahoo.com/translate_txt',
             'Content-Type':'application/x-www-form-urlencoded'}
-            self.conn = httplib.HTTPConnection('babelfish.altavista.com')
-            self.conn.request('POST','/tr',"doit=done&intl=1&tt=urltext&trtext="+self.text+"&lp="+self.method, headers)
+            self.conn = httplib.HTTPConnection('babelfish.yahoo.com')
+            self.conn.request('POST','/translate_txt',"doit=done&intl=1&tt=urltext&trtext="+self.text+"&lp="+self.method, headers)
             self.response = self.conn.getresponse()
             self.page = self.response.read()
             self.conn.close()
             
             self.result = self.regex.search(self.page)
-            self.result = self.result.group(2)
+            self.result = self.result.group(1)
             
             return self.result
             
@@ -139,4 +139,4 @@ def get_pairs():
     
 get_pairs()
 #License GPL
-#Last modified 02-17-06
+#Last modified 05-16-08

@@ -1,3 +1,6 @@
+05-16-08 2.2.2
+updated translator.py no changes made to transbot.py
+
 8-16-07 2.2.1
 Removed threading from !translators never really figured out why only that didn't work maybe because it calls another module outside that might also thread
 
