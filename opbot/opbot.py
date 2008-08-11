@@ -1,6 +1,6 @@
 #!/usr/bin/python
 __module_name__ = "Cancel's OpBot"
-__module_version__ = "2.7.0" 
+__module_version__ = "2.7.1" 
 __module_description__ = "OpBot by Cancel"
 
 import xchat
@@ -295,9 +295,9 @@ def on_text(word, word_eol, userdata):
                 if re.search(option["ops"][triggernick],host,re.I):
                     if trigger[1] == "true" or trigger[1] == "on" or trigger[1] == "yes":
                         option["limitjoins"] = True
-                elif trigger[1] == "false" or trigger[1] == "off" or trigger[1] == "no":
-                    option["limitjoins"] = False
-                destination.command("say limitjoins has been set "+color["blue"] + str(option["limitjoins"]))
+                    elif trigger[1] == "false" or trigger[1] == "off" or trigger[1] == "no":
+                        option["limitjoins"] = False
+                destination.command("say limitjoins has been set " + color["blue"] + str(option["limitjoins"]))
                 save_vars()
             else:
                 destination.command("kick " + triggernick)
@@ -700,4 +700,4 @@ xchat.hook_print('Ban List', on_banlist)
 xchat.hook_command('clonescan', clonescan_local, help="/clonescan")
 
 #LICENSE GPL
-#Last modified 2-3-08
+#Last modified 8-11-08
