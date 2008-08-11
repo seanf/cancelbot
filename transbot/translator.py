@@ -38,6 +38,7 @@ a.translate('this is a test')
 #---Imports---#000000#FFFFFF----------------------------------------------------
 import re
 import httplib
+import sys
 
 #---Globals---#000000#FFFFFF----------------------------------------------------
 lp = {}
@@ -136,7 +137,16 @@ def get_pairs():
     for topkey in lp:
         pairs.append(topkey + " to " + str(lp[topkey].keys()))
     return pairs
-    
+
 get_pairs()
+
+if len(sys.argv) == 4:
+    source = sys.argv[1]
+    destination = sys.argv[2]
+    sourceText = sys.argv[3]
+    workerBee = Translator(source, destination)
+    result = workerBee.translate(sys.argv[3])
+    print result    
+       
 #License GPL
-#Last modified 05-16-08
+#Last modified 06-30-08
