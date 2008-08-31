@@ -10,12 +10,13 @@ opbot.ini and opbot.py MUST GO IN YOUR .xchat2/
 Explanation of the lines in the ini file.
 
 One of the seemingly inconsequential but biggest changes in my scripts is taking the variables out of the script an putting them all in their own file.  It doesn't matter what order they are in in the file just that they are there and in the right section.
+NONE OF THE OPTIONS SHOULD BE BLANK
 
 This option tells the bot what channels you are opped in. You don't want to be yelling at folks in channels you don't have ops in. Separate channels with spaces and make sure the channel name is as it appears in your Xchat tab.
-opin=#christiandebate #mychannel
+opin = #christiandebate #mychannel
 
 This option says if limitjoin is on
-limitjoins = yes
+limitjoins = True
 
 This option tells the bot what channels to control the user limit format like opin
 limitchannels = #christian
@@ -27,52 +28,58 @@ The time in seconds to wait before adjusting the channel user limit
 limittime = 10
 
 This option is for moderated channels.  Tells the bot if it should give voice or not. 
-autovoice=yes
+autovoice = True
 
 This option is a list of channels to give voice in
 voicein=#christiandebate #mychannel
 
 This option tells the bot if it should autoidentify when a notice from "indentifyfrom" is received. If this yes the bot will check your nick every check minutes.  It will then execute a user defined command of release (make a command with that name in xchat user commands).  It will also issue a command to chanserv to op you in the channels in the opin
-identify=yes
+identify = True
 
 This option waits this many minutes before checking nick again
-check=5
+check = 5
 This option waits this many minutes before rescaning nicks in channels in opin against bad channels list.
-scan=20
+scan = 20
 
 This option is the nick to expect identify notices from. This is case sensitive.
-identifyfrom=NickServ
+identifyfrom = NickServ
 
 
 This option is what phrase to look for in notices from "identifyfrom".  This is case sensitive.  This should be what you are expecting NickServ to say.
-identifyphrase=I will change your nick for you
+identifyphrase = I will change your nick for you
 
 This option is the nick you want to make sure you keep or change back to when idenitify
-mynick=CancelBot
+mynick = CancelBot
 
 This option pings whoever request it.
-ping=yes
+ping = True
 
 This option returns uptime and load stats.
-uptime=yes
+uptime = True
 
 This option turns caps abuse checking on or off
-capsabuse=yes
+capsabuse= True
 
 If the line is this percent caps kick users
-capslimit=50
+capslimit = 50
 
 This option is a space seperated list of words not to be said in a channel.  It is not case sensitive and will match anywhere in the string.
-badwords=the bad words go here you may use regexes like b.*tch f.*ck
+badwords =the bad words go here you may use regexes like b.*tch f.*ck
+
+This option is a space seperated list of channels that you'll watch for badwords
+badwordsinchannel = #christiandebate
+
+This options says wether or not to care about badwords said in a channel
+badwordsenabled = True
 
 This option is a list of inappropriate nicks for the room.  This list automatically appends "badwords".  It will match anywhere in the nickname, host, or realusername.
-badnicks=nazi cock hitler satan lucifer hate
+badnicks = nazi cock hitler satan lucifer hate
 
 This option is a list of inappropriate channels users checked when a user joins.  This list automatically adds "badwords"
-badchannels=porn hate sex xxx
+badchannels = porn hate sex xxx
 
 Should join flood and text flooding protection be on
-antiflood = yes
+antiflood = True
 
 This is the number of  joins or repeated text to trigger anti flood measures
 antifloodlimit = 3
@@ -96,7 +103,7 @@ msgjoinflood = Next time try to stay a while
 msgrepeatflood = No need to repeat like that
 
 If yes will check channels in opin everytime a nick joins channel
-clonescan = yes
+clonescan = True
 
 What to do with a clone.  This response should be a valid existing xchat command
 msg, notice, kick, ban, kickban

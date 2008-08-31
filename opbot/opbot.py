@@ -1,6 +1,6 @@
 #!/usr/bin/python
 __module_name__ = "Cancel's OpBot"
-__module_version__ = "2.7.1" 
+__module_version__ = "2.8.0" 
 __module_description__ = "OpBot by Cancel"
 
 import xchat
@@ -75,9 +75,11 @@ def load_vars():
         option["clonescan"] = config.getboolean("main", "clonescan")
         option["clearbans"] = config.getboolean("main", "clearbans")
         option["clearbantime"] = config.getint("main", "clearbantime")
-        
+        option["badwordsenabled"] = config.getboolean("main", "badwordsenabled")
+            
         option["opin"] = re.split(' ', option["opin"])
         option["badwords"] = re.split(' ', option["badwords"])
+        option["badwordsinchannel"] = re.split(' ', option["badwordsinchannel"])
         option["badnicks"] = re.split(' ', option["badnicks"]) + option["badwords"]
         option["badchannels"] = re.split(' ', option["badchannels"]) + option["badwords"]
         
@@ -188,10 +190,11 @@ def on_text(word, word_eol, userdata):
             
         if len(word) == 3:
             prefix = word[2]
-
-        for badword in option["badwords"]:
-            if re.search(badword, word[1], re.I) and prefix != "@":
-                destination.command("kickban " + triggernick + " " + option["msgbadword"])
+        
+        if option["badwordsenabled"] == True and triggerchannel in option["badwordsinchannel"]:
+            for badword in option["badwords"]:
+                if re.search(badword, word[1], re.I) and prefix != "@":
+                    destination.command("kickban " + triggernick + " " + option["msgbadword"])
                 
         if option["capsabuse"] == True and prefix != "@":
             length = float(len(word[1]))
@@ -477,7 +480,7 @@ def nick_check(userdata):
         for chan in option["opin"]:
             xchat.command("chanserv op " + chan + " " + option["mynick"])
     return 1 
-
+    
 def chan_scan(userdata):
     global thecontext
     for chan in option["opin"]:
@@ -700,4 +703,4 @@ xchat.hook_print('Ban List', on_banlist)
 xchat.hook_command('clonescan', clonescan_local, help="/clonescan")
 
 #LICENSE GPL
-#Last modified 8-11-08
+#Last modified 8-28-08

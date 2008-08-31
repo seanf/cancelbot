@@ -1,3 +1,6 @@
+08-29-08 2.8.0
+added options to enable/disable bad words in channels and specify which channels to watch for badwords in so you can police one channel but not another
+
 08-11-08 2.7.1
 indentation error on line 298 found by Psyker7
 
