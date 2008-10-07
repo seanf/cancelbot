@@ -1,3 +1,6 @@
+10-07-08 2.8.1
+a typo in the on_part jointtimer changed to jointimer
+
 08-29-08 2.8.0
 added options to enable/disable bad words in channels and specify which channels to watch for badwords in so you can police one channel but not another
 

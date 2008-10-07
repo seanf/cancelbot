@@ -1,6 +1,6 @@
 #!/usr/bin/python
 __module_name__ = "Cancel's OpBot"
-__module_version__ = "2.8.0" 
+__module_version__ = "2.8.1" 
 __module_description__ = "OpBot by Cancel"
 
 import xchat
@@ -400,7 +400,7 @@ def on_part(word, word_eol, userdata):
     thecontext = xchat.find_context(channel=triggerchannel)
     if triggerchannel in option["opin"]:
         if triggerchannel in option["limitchannels"] and option["limitjoins"] == True:
-            jointtimer = xchat.hook_timer(option["limittime"], part_limit, userdata=thecontext)
+            jointimer = xchat.hook_timer(option["limittime"], part_limit, userdata=thecontext)
     
 def part_limit(userdata):
     userlist = userdata.get_list('users')
@@ -703,4 +703,4 @@ xchat.hook_print('Ban List', on_banlist)
 xchat.hook_command('clonescan', clonescan_local, help="/clonescan")
 
 #LICENSE GPL
-#Last modified 8-28-08
+#Last modified 10-07-08
