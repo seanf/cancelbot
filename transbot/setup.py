@@ -3,14 +3,14 @@
 from distutils.core import setup
 
 setup(name='translator',
-      version='1.2.0',
-      description='BabelFish Yahoo Translator Utility',
+      version='2.0.0',
+      description='Google Translator Utility',
       author='Jason Powell',
       author_email='jtpowell@users.sourceforge.net',
       license='GPL',
       url='http://sourceforge.net/projects/cancelbot',
       py_modules=['translator'],
-      packages = [''],
-      platform = 'any',
+      #packages = [''],
+      #platform = 'any',
       extra_path = 'cancelbot',
      )

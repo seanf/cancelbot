@@ -1,3 +1,6 @@
+2.0.0 12-22-08
+rewritten to use translator.google.com instead of babelfish.yahoo.com
+
 1.3.0 6-29-08
 changed to support direct command line translation ie added for OSX colloquy
 translator.py english spanish "this is a test

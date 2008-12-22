@@ -50,29 +50,26 @@ class Translator:
         """Source Language, Destination Language"""
         self.source = source.capitalize()
         self.destination = destination.capitalize()
-        self.method = lp[self.source][self.destination]
-        self.regex = re.compile('<input type="hidden" name="p" value="(.+?)">',re.DOTALL)
+        #self.method = lp[self.source] +"|" + lp[self.destination] + "|"
+        self.regex = re.compile('<div id=result_box dir="...">(.+?)</div>',re.DOTALL)
         self.text = ''
         self.page = ''
         self.result = ''
         
     def translate(self, text):
-        """The text to translate 150 word limit"""
         if text == '':
             return "Enter some text"
-        elif len(text) > 750:
-            return "There is a 150 word limit"
         else:
             self.text = text
         
         try:
-            headers = {'Host':'babelfish.yahoo.com','User-Agent':'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.0.5) Gecko/20060731',
+            headers = {'Host':'translate.google.com','User-Agent':'Mozilla/5.0 (Windows; U; Windows NT 5.1; it; rv:1.9.1b2) Gecko/20081201 Firefox/3.1b2',
             'Accept':'text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain',
-            'Accept-Language':'en-us,en;q=0.5','Accept-Charset':'utf-8',
-            'Keep-Alive':'300','Connection':'keep-alive','Referer':'http://babelfish.yahoo.com/translate_txt',
+            'Accept-Charset':'ISO-8859-1,UTF-8;q=0.7,*;q=0.7',
+            'Keep-Alive':'300','Connection':'keep-alive','Referer':'http://translate.google.com/translate_t',
             'Content-Type':'application/x-www-form-urlencoded'}
-            self.conn = httplib.HTTPConnection('babelfish.yahoo.com')
-            self.conn.request('POST','/translate_txt',"doit=done&intl=1&tt=urltext&trtext="+self.text+"&lp="+self.method, headers)
+            self.conn = httplib.HTTPConnection('translate.google.com')
+            self.conn.request('POST','/translate_t',"hl=" + lp[self.source] + "&sl=" + lp[self.source] + "&tl=" + lp[self.destination] + "&q=" + self.text, headers)
             self.response = self.conn.getresponse()
             self.page = self.response.read()
             self.conn.close()
@@ -80,7 +77,7 @@ class Translator:
             self.result = self.regex.search(self.page)
             self.result = self.result.group(1)
             
-            return self.result
+            return  self.result
             
         except Exception, args:
             print Exception, args
@@ -92,12 +89,12 @@ def get_pairs():
     global lp
     if not lp:
         try:
-            #Tries to get language pairs from babelfish on the off chance they have added or removed
+            #Tries to get language pairs from google on the off chance they have added or removed
             #If not successfull do it internally using assumed known pairs.
-            data = re.compile("(?is)<!-- Source text \(content\) -->.*<!-- End: Source text \(content\) -->")
-            languages = re.compile('(?is)<option value="(.._..)">(.+?) to (.+?)</option>')
+            data = re.compile('(?ism)<form action="/translate_t" method=post id="text_form" name="text_form">(.+?)</form>')
+            languages = re.compile('(?ism)<option.+?value=(.+?)>(.+?)</option>')
             
-            conn = httplib.HTTPConnection('babelfish.altavista.com')
+            conn = httplib.HTTPConnection('translate.google.com')
             conn.request('GET', '/')
             response = self.conn.getresponse()
             page = response.read()
@@ -107,36 +104,47 @@ def get_pairs():
             result = result.group()
             
             pairs = languages.findall(result)
-            for pair in pairs:
-                if pair[1] not in lp:
-                    lp[pair[1]] = {}
-                    lp[pair[1]][pair[2]] = pair[0]
-                else:
-                    lp[pair[1]][pair[2]] = pair[0]
+            for pair in pairs:                   
+                lp[pair[2]]= pair[1]                
             
         except:
-            lp = {'English':{'Chinese-simp':'en_zh', 'Chinese-trad':'en_zt', 'Dutch':'en_nl', 'French':'en_fr', 
-            'German':'en_de', 'Greek':'en_el', 'Italian':'en_it', 'Japanese':'en_ja',
-            'Korean':'en_ko', 'Portuguese':'en_pt', 'Russian':'en_ru', 'Spanish':'en_es'},
-            'Chinese-simp':{'English':'zh_en'},
-            'Chinese-trad':{'English':'zt_en'},
-            'Dutch':{'English':'nl_en', 'French':'nl_fr'},
-            'French':{'English':'fr_en', 'German':'fr_de', 'Greek':'fr_el', 'Italian':'fr_it',
-            'Portuguese':'fr_pt', 'Dutch':'fr_nl', 'Spanish':'fr_es'},
-            'German':{'English':'de_en', 'French':'de_fr'},
-            'Greek':{'English':'el_en', 'French':'el_fr'},
-            'Italian':{'English':'it_en', 'French':'it_ft'},
-            'Japanese':{'English':'ja_en'},
-            'Korean':{'English':'ko_en'},
-            'Portuguese':{'English':'pt_en', 'French':'pt_fr'},
-            'Russian':{'English':'ru_en'},
-            'Spanish':{'English':'es_en', 'French':'es_fr'}
+            lp = {"Arabic":"ar",
+                  "Bulgarian":"bg",
+                  "Catalan":"ca",
+                  "Chinese":"zh-CN",
+                  "Croatian":"hr",
+                  "Czech":"cs",
+                  "Danish":"da",
+                  "Dutch":"dl",
+                  "English":"en",
+                  "Filipino":"tl",
+                  "Finnish":"fi",
+                  "French":"fr",
+                  "German":"de",
+                  "Greek":"el",
+                  "Hebrew":"iw",
+                  "Hindi":"hi",
+                  "Indonesian":"id",
+                  "Italian":"it",
+                  "Japanese":"ja",
+                  "Korean":"ko",
+                  "Latvian":"lv",
+                  "Lithuanian":"lt",
+                  "Norwegian":"no",
+                  "Polish":"pl",
+                  "Portuguese":"pt",
+                  "Romanian":"ro",
+                  "Russian":"ru",
+                  "Serbian":"sr",
+                  "Slovak":"sk",
+                  "Slovenian":"sl",
+                  "Spanish":"es",
+                  "Swedish":"sv",
+                  "Ukrainian":"uk",
+                  "Vietnamese":"vi"                
             }
     
-    pairs = []
-    for topkey in lp:
-        pairs.append(topkey + " to " + str(lp[topkey].keys()))
-    return pairs
+    return sorted(lp.keys())
 
 get_pairs()
 
@@ -146,7 +154,10 @@ if len(sys.argv) == 4:
     sourceText = sys.argv[3]
     workerBee = Translator(source, destination)
     result = workerBee.translate(sys.argv[3])
-    print result    
+    print result
+    
+else:
+    print get_pairs()
        
 #License GPL
-#Last modified 06-30-08
+#Last modified 12-22-08
