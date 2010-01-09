@@ -1,3 +1,6 @@
+2.1.0 01-09-10
+modified to use Google's ajax/json language api
+
 2.0.0 12-22-08
 rewritten to use translator.google.com instead of babelfish.yahoo.com
 

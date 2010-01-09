@@ -3,7 +3,7 @@
 from distutils.core import setup
 
 setup(name='translator',
-      version='2.0.0',
+      version='2.1.0',
       description='Google Translator Utility',
       author='Jason Powell',
       author_email='jtpowell@users.sourceforge.net',

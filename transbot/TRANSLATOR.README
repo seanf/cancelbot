@@ -1,4 +1,4 @@
-Description: translator is an interface to http://babelfish.altavista.com My original script was in perl and only worked in xchat.  Rather then include it in the xchat script I've gone with a seperate module.  It should work with anything else.
+Description: translator is an interface to http://translate.google.com My original script was in perl and only worked in xchat.  Rather then include it in the xchat script I've gone with a seperate module.  It should work with anything else.
 
 Installation: python setup.py install
 
@@ -23,4 +23,4 @@ a.translate('this is a test')
 'esto es una prueba'
 
 License GPL
-Last modified 2-17-06
+Last modified 01-09-10

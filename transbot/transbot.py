@@ -19,7 +19,7 @@
 #    59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             #
 ############################################################################
 __module_name__ = "Cancel's TransBot"
-__module_version__ = "2.3.0" 
+__module_version__ = "2.3.1" 
 __module_description__ = "TransBot by Cancel"
 
 #---Imports---#000000#FFFFFF----------------------------------------------------
@@ -209,4 +209,4 @@ xchat.hook_command('autotranslate', autotranslate, help="see the README")
 xchat.hook_command('trans', local_trans, help="see the README")
 
 #LICENSE GPL
-#Last modified 12-22-08
+#Last modified 01-09-10
