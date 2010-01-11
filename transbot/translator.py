@@ -158,7 +158,7 @@ class Translator:
             responseData = json.loads(response)
             self.result = responseData["responseData"]["translatedText"]
             
-            return  self.result
+            return  self.result.encode('utf-8','ignore')
             
         except Exception, args:
             print Exception, args
@@ -184,4 +184,4 @@ else:
     print get_pairs()
        
 #License GPL
-#Last modified 01-09-10
+#Last modified 01-11-10

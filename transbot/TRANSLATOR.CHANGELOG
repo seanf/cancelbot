@@ -1,3 +1,6 @@
+2.1.1 01-11-10
+removed encode for console version
+
 2.1.0 01-09-10
 modified to use Google's ajax/json language api
 
