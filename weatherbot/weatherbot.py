@@ -1,13 +1,12 @@
 #!/usr/bin/python
 __module_name__ = "Cancel's WeatherBot"
-__module_version__ = "2.1.1" 
+__module_version__ = "2.2.0" 
 __module_description__ = "WeatherBot by Cancel"
 
 import xchat
 import os
 import re
 import ConfigParser
-import threading
 import weather
 
 print "\0034",__module_name__, __module_version__,"has been loaded\003"
@@ -46,42 +45,34 @@ def on_text(word, word_eol, userdata):
     global option
     destination = xchat.get_context()    
     triggernick = word[0]
-    trigger = re.split(' ',word[1].lower())
-    
+    trigger = re.split(' ', word[1].lower())
+ 
     if trigger[0] == '!weather' and option["service"] == True:
-        if re.search('D', trigger[1]) or len(trigger[1]) < 5:
-            destination.command("say try enter a 5 digit U.S. zip code")
-        else:
-            threading.Thread(target=get_weather, args=(trigger[1], destination)).start()
+        get_weather(trigger[1], destination)
         
 
 def on_pvt(word, word_eol, userdata):
     destination = xchat.get_context()
     triggernick = word[0]
-    trigger = re.split(' ',word[1].lower())
+    trigger = re.split(' ', word[1].lower())
+
     if trigger[0] == '!weather' and option["service"] == True:
-        if re.search('\D', trigger[1]) or len(trigger[1]) < 5:
-            destination.command("say try a 5 digit U.S. zip code")
-        else:
-            threading.Thread(target=get_weather, args=(trigger[1], destination)).start()
+        get_weather(trigger[1], destination)
 
 def get_weather(lookup, destination):
     response = weather.getweather(lookup)
     destination.command("say " + str(response))
     
 def local_weather(word, word_eol, userdata):
-        if re.search('\D', word[1]):
-            print color["red"], "Try a 5 digit U.S. zip code"
-        else:
-            response = weather.getweather(word[1])
-            print response
+        response = weather.getweather(word_eol[1])
+        print response
     
 load_vars()
 
 #The hooks go here
 xchat.hook_print('Channel Message', on_text)
 xchat.hook_print('Private Message to Dialog', on_pvt)
-xchat.hook_command('weather', local_weather, help="do /weather zipcode")
+xchat.hook_command('weather', local_weather, help="do /weather locale")
 
 #LICENSE GPL
-#Last modified 12-17-06
+#Last modified 02-18-10

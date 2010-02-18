@@ -3,7 +3,7 @@
 from distutils.core import setup
 
 setup(name='weather',
-      version='0.3',
+      version='1.0.0',
       description='Weather Utility',
       author='Jason Powell',
       author_email='jtpowell@users.sourceforge.net',

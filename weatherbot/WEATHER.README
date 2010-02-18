@@ -1,20 +1,15 @@
-Description: weather is an interface to http://www.weather.com My original script was in perl and only worked in xchat.  Rather then include it in the xchat script I've gone with a seperate module.  It should work with anything else.
+Description: weather is an interface to http://google.com/ig?weather=  My original script was in perl and only worked in xchat.  Rather then include it in the xchat script I've gone with a seperate module.  It should work with anything else.
 
 Installation: python setup.py install
 
 Usage: There is one "public" method getweather.  It should always be passed a string.  Depending on the results you will get back a dictionary or string.
 
-from weather import *
+from weather import getweather
 
 getweather("90210")
-{'City': 'Local Forecast for Beverly Hills, CA (90210)', 'UV Index': '0 Low', 'Temp': '56FFeels Like 56F', 'Visibility': '9.0 miles', 'Humidity': '90%', 'Pressure': '29.76in.', 'Pressure:': '', 'Dew Point': '53F', 'Wind': 'From N at 11 mph'}
+{'tempC': u'18', 'city': u'Beverly Hills, CA', 'tempF': u'65', 'forecastDate': u'2010-02-18', 'windCondition': u'Wind: S at 5 mph', 'postalCode': u'90210', 'humidity': u'Humidity: 57%', 'condition': u'Sunny'}
 
-getweather("9021") or getweather('chicago')
-If less then 5 digits or non numbers are input an exception is raised
-
-getweather("33333")
-If the zipcode is invalid a string saying "Check Zip" will be returned
+getweather("90210") or getweather('chicago')
 
 License GPL
-Last modified 2-11-05
-Real Modified
+Last modified 02-18-10
